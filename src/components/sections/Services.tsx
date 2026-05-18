@@ -223,7 +223,7 @@ export function Services() {
                       borderRadius: 12,
                       border: '1px solid var(--line)',
                       background: isOpen ? `${s.hue}22` : 'rgba(255,255,255,0.03)',
-                      color: isOpen ? '#fff' : 'var(--fg-dim)',
+                      color: isOpen ? s.hue : 'var(--fg-dim)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -253,7 +253,7 @@ export function Services() {
                       borderRadius: 999,
                       border: '1px solid var(--line)',
                       background: 'rgba(255,255,255,0.02)',
-                      color: isOpen ? '#fff' : 'var(--fg-faint)',
+                      color: isOpen ? 'var(--fg)' : 'var(--fg-faint)',
                       fontSize: 11,
                       letterSpacing: '0.1em',
                       transition: 'all .35s',
@@ -267,7 +267,7 @@ export function Services() {
                       width: 38,
                       height: 38,
                       borderRadius: '50%',
-                      border: '1px solid var(--line)',
+                      border: isOpen ? '0px solid var(--line)' : '1px solid var(--line)',
                       color: isOpen ? '#fff' : 'var(--fg-faint)',
                       display: 'flex',
                       alignItems: 'center',
@@ -336,7 +336,7 @@ export function Services() {
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                color: '#fff',
+                                color: s.hue,
                               }}
                             >
                               <Icon.Check size={11} />
