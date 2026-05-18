@@ -125,7 +125,7 @@ export function Process() {
                       width: 34,
                       height: 34,
                       borderRadius: 10,
-                      border: '1px solid var(--line)',
+                      border: on ? '0px solid var(--line)' : '1px solid var(--line)',
                       background: on ? 'var(--grad)' : 'transparent',
                       color: on ? '#fff' : 'var(--fg-faint)',
                       display: 'flex',

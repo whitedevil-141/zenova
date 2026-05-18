@@ -379,7 +379,9 @@ section.sec {
 }
 .zlogo-word {
   display: inline-block;
+  letter-spacing: 1px;
   padding-left: 3px;
+  padding-bottom: 4px;
 }
 .zlogo-mark-only {
   display: inline-block;

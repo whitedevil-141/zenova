@@ -192,7 +192,7 @@ export function Testimonials() {
 
   return (
     <section
-      id="about"
+      id="testimonials"
       className="sec"
       style={{
         borderTop: '1px solid var(--line)',
