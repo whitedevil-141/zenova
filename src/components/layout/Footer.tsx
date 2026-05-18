@@ -1,14 +1,47 @@
+import { Link } from 'react-router-dom';
 import { Logo } from './Logo';
+
+interface FooterLink {
+  label: string;
+  to: { pathname: string; hash?: string };
+}
 
 interface FooterCol {
   title: string;
-  links: string[];
+  links: FooterLink[];
 }
 
 const COLS: FooterCol[] = [
-  { title: 'Services', links: ['Web Development', 'Marketing', 'Startup Support', 'Business Mgmt', 'Content'] },
-  { title: 'Company', links: ['About', 'Work', 'Process', 'Careers', 'Contact'] },
-  { title: 'Resources', links: ['Playbook', 'Pricing', 'FAQ', 'Newsletter', 'Press'] },
+  {
+    title: 'Services',
+    links: [
+      { label: 'Web Development', to: { pathname: '/services' } },
+      { label: 'Marketing', to: { pathname: '/services' } },
+      { label: 'Startup Support', to: { pathname: '/services' } },
+      { label: 'Business Mgmt', to: { pathname: '/services' } },
+      { label: 'Content', to: { pathname: '/services' } },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { label: 'About', to: { pathname: '/about' } },
+      { label: 'Work', to: { pathname: '/work' } },
+      { label: 'Process', to: { pathname: '/process' } },
+      { label: 'Careers', to: { pathname: '/about' } },
+      { label: 'Contact', to: { pathname: '/', hash: '#contact' } },
+    ],
+  },
+  {
+    title: 'Resources',
+    links: [
+      { label: 'Playbook', to: { pathname: '/process' } },
+      { label: 'Pricing', to: { pathname: '/services' } },
+      { label: 'FAQ', to: { pathname: '/', hash: '#faq' } },
+      { label: 'Newsletter', to: { pathname: '/', hash: '#contact' } },
+      { label: 'Press', to: { pathname: '/about' } },
+    ],
+  },
 ];
 
 const SOCIAL = ['Tw', 'Ln', 'Gh', 'Dr'];
@@ -19,7 +52,7 @@ export function Footer() {
       <div className="container">
         <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '1.4fr repeat(3, 1fr)', gap: 48 }}>
           <div>
-            <Logo size={20} />
+            <Logo size={25} />
             <p style={{ color: 'var(--fg-dim)', fontSize: 14, lineHeight: 1.55, marginTop: 22, maxWidth: 320 }}>
               An independent studio building the design, code and growth motion behind modern businesses.
             </p>
@@ -28,6 +61,7 @@ export function Footer() {
                 <a
                   key={s}
                   href="#"
+                  onClick={(e) => e.preventDefault()}
                   style={{
                     width: 36,
                     height: 36,
@@ -53,15 +87,15 @@ export function Footer() {
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {c.links.map((l) => (
-                  <a
-                    key={l}
-                    href="#"
+                  <Link
+                    key={l.label}
+                    to={l.to}
                     style={{ fontSize: 14, color: 'var(--fg-dim)' }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--fg)')}
                     onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--fg-dim)')}
                   >
-                    {l}
-                  </a>
+                    {l.label}
+                  </Link>
                 ))}
               </div>
             </div>

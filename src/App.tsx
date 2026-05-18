@@ -1,16 +1,14 @@
 import { lazy, Suspense, useEffect } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Nav } from '@/components/layout/Nav';
 import { Footer } from '@/components/layout/Footer';
-import { Hero } from '@/components/sections/Hero';
-import { Marquee } from '@/components/sections/Marquee';
-import { Services } from '@/components/sections/Services';
-import { Process } from '@/components/sections/Process';
-import { Work } from '@/components/sections/Work';
-import { Testimonials } from '@/components/sections/Testimonials';
-import { CTA } from '@/components/sections/CTA';
+import { Home } from '@/pages/Home';
+import { ServicesPage } from '@/pages/ServicesPage';
+import { ProcessPage } from '@/pages/ProcessPage';
+import { WorkPage } from '@/pages/WorkPage';
+import { AboutPage } from '@/pages/AboutPage';
 import { TWEAK_DEFAULTS } from '@/config/tweaks';
 import { useTweaks } from '@/hooks/useTweaks';
-import { useReveal } from '@/hooks/useReveal';
 import { applyPalette } from '@/lib/palette';
 import type { Background } from '@/types/tweaks';
 
@@ -51,27 +49,35 @@ export function App() {
     }
   }, [t.theme]);
 
-  useReveal([t.showMarquee, t.showTestimonials]);
-
   return (
-    <>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Nav
         theme={t.theme}
         onToggleTheme={() => setTweak('theme', t.theme === 'dark' ? 'light' : 'dark')}
       />
-      <Hero rotateMs={t.rotateMs} background={BG_MAP[t.background] ?? 'blobs+grid'} />
-      {t.showMarquee && <Marquee />}
-      <Services />
-      <Process />
-      <Work />
-      {t.showTestimonials && <Testimonials />}
-      <CTA />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Home
+              rotateMs={t.rotateMs}
+              background={BG_MAP[t.background] ?? 'blobs+grid'}
+              showMarquee={t.showMarquee}
+              showTestimonials={t.showTestimonials}
+            />
+          }
+        />
+        <Route path="/services" element={<ServicesPage />} />
+        <Route path="/process" element={<ProcessPage />} />
+        <Route path="/work" element={<WorkPage />} />
+        <Route path="/about" element={<AboutPage />} />
+      </Routes>
       <Footer />
       {ZenovaTweaks && (
         <Suspense fallback={null}>
           <ZenovaTweaks tweaks={t} setTweak={setTweak} />
         </Suspense>
       )}
-    </>
+    </BrowserRouter>
   );
 }

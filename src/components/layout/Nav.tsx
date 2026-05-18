@@ -1,4 +1,5 @@
 import { useEffect, useState, type CSSProperties } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Logo } from './Logo';
 import { Icon } from '@/components/icons/Icon';
 import type { Theme } from '@/types/tweaks';
@@ -9,15 +10,16 @@ interface NavProps {
 }
 
 const NAV_LINKS = [
-  { label: 'Services', href: '#services' },
-  { label: 'Process', href: '#process' },
-  { label: 'Work', href: '#work' },
-  { label: 'About', href: '#about' },
+  { label: 'Services', to: '/services' },
+  { label: 'Process', to: '/process' },
+  { label: 'Work', to: '/work' },
+  { label: 'About', to: '/about' },
 ];
 
 export function Nav({ theme = 'dark', onToggleTheme }: NavProps) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -114,33 +116,37 @@ export function Nav({ theme = 'dark', onToggleTheme }: NavProps) {
           transition: 'all .35s cubic-bezier(.2,.7,.2,1)',
         }}
       >
-        <a href="#top" style={{ display: 'inline-flex' }} onClick={() => setMenuOpen(false)}>
-          <Logo size={20} />
-        </a>
+        <Link to="/" style={{ display: 'inline-flex' }} onClick={() => setMenuOpen(false)}>
+          <Logo size={25} />
+        </Link>
         <div className="nav-links" style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-          {NAV_LINKS.map((l) => (
-            <a
-              key={l.label}
-              href={l.href}
-              className="nav-link"
-              style={{
-                padding: '8px 14px',
-                borderRadius: 999,
-                fontSize: 14,
-                fontWeight: 500,
-                color: 'var(--fg-dim)',
-                transition: 'color .2s, background .2s',
-              }}
-            >
-              {l.label}
-            </a>
-          ))}
+          {NAV_LINKS.map((l) => {
+            const active = location.pathname === l.to;
+            return (
+              <Link
+                key={l.label}
+                to={l.to}
+                className="nav-link"
+                style={{
+                  padding: '8px 14px',
+                  borderRadius: 999,
+                  fontSize: 14,
+                  fontWeight: 500,
+                  color: active ? 'var(--fg)' : 'var(--fg-dim)',
+                  background: active ? 'var(--card-hover)' : 'transparent',
+                  transition: 'color .2s, background .2s',
+                }}
+              >
+                {l.label}
+              </Link>
+            );
+          })}
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <div className="nav-desktop-only" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             {onToggleTheme && themeBtn()}
-            <a
-              href="#contact"
+            <Link
+              to="/#contact"
               className="nav-cta"
               style={{
                 height: 42,
@@ -153,11 +159,12 @@ export function Nav({ theme = 'dark', onToggleTheme }: NavProps) {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 8,
+                textDecoration: 'none',
                 boxShadow: '0 4px 18px rgba(58,91,255,0.35), inset 0 1px 0 rgba(255,255,255,0.18)',
               }}
             >
               Start project <Icon.Arrow size={14} />
-            </a>
+            </Link>
           </div>
 
           <button
@@ -192,15 +199,15 @@ export function Nav({ theme = 'dark', onToggleTheme }: NavProps) {
         <div className="mobile-menu__inner">
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
             {NAV_LINKS.map((l) => (
-              <a
+              <Link
                 key={l.label}
-                href={l.href}
+                to={l.to}
                 onClick={() => setMenuOpen(false)}
                 className="mobile-menu__link"
               >
                 {l.label}
                 <Icon.Arrow size={16} />
-              </a>
+              </Link>
             ))}
           </div>
           <div
@@ -214,8 +221,8 @@ export function Nav({ theme = 'dark', onToggleTheme }: NavProps) {
             }}
           >
             {onToggleTheme && themeBtn({ width: 46, height: 46 })}
-            <a
-              href="#contact"
+            <Link
+              to="/#contact"
               onClick={() => setMenuOpen(false)}
               style={{
                 flex: 1,
@@ -229,11 +236,12 @@ export function Nav({ theme = 'dark', onToggleTheme }: NavProps) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 8,
+                textDecoration: 'none',
                 boxShadow: '0 6px 22px rgba(58,91,255,0.35), inset 0 1px 0 rgba(255,255,255,0.18)',
               }}
             >
               Start a project <Icon.Arrow size={14} />
-            </a>
+            </Link>
           </div>
         </div>
       </div>

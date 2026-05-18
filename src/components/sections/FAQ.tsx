@@ -1,0 +1,189 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Icon } from '@/components/icons/Icon';
+import { SectionHeader } from '@/components/ui/SectionHeader';
+
+interface QA {
+  q: string;
+  a: string;
+}
+
+const FAQS: QA[] = [
+  {
+    q: 'How is Zenova different from a traditional agency?',
+    a: "We're one accountable team across design, build and growth — not a handoff between vendors. Same Slack channel, same Figma, same engineers from kickoff to month twelve.",
+  },
+  {
+    q: 'What does a typical engagement look like?',
+    a: 'Most clients start with a 6–10 week build (Discover → Design → Build) and continue into a monthly Grow retainer. Quarter-long minimums; month-to-month after that.',
+  },
+  {
+    q: 'Do we own the code and design files?',
+    a: 'Always. Repos sit in your GitHub from day one and Figma files transfer at handoff. Nothing about your stack is hostage to us continuing the engagement.',
+  },
+  {
+    q: 'How do you price projects?',
+    a: 'Fixed-fee per phase for the build, then a flat monthly retainer for ongoing growth work. We send a single invoice with everything broken out — no per-hour surprises.',
+  },
+  {
+    q: 'Can you work with our existing team or codebase?',
+    a: 'Yes — about a third of our engagements augment an in-house team. We adapt to your conventions, sit in your standups, and write code your engineers can read on day one.',
+  },
+  {
+    q: 'How quickly can we start?',
+    a: 'Discovery usually kicks off 1–2 weeks after the intro call. We hold one onboarding slot per month so we never overload an engagement.',
+  },
+];
+
+function FAQItem({ item, isOpen, onToggle }: { item: QA; isOpen: boolean; onToggle: () => void }) {
+  return (
+    <div
+      style={{
+        borderBottom: '1px solid var(--line)',
+        background: isOpen ? 'rgba(109,76,255,0.04)' : 'transparent',
+        transition: 'background .35s cubic-bezier(.2,.7,.2,1)',
+      }}
+    >
+      <button
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        style={{
+          width: '100%',
+          background: 'transparent',
+          border: 'none',
+          padding: '28px 32px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 24,
+          cursor: 'pointer',
+          textAlign: 'left',
+          color: 'var(--fg)',
+        }}
+      >
+        <span
+          className="display"
+          style={{
+            fontSize: 'clamp(18px, 1.7vw, 22px)',
+            fontWeight: 500,
+            color: isOpen ? 'var(--fg)' : 'var(--fg-dim)',
+            transition: 'color .25s',
+          }}
+        >
+          {item.q}
+        </span>
+        <span
+          style={{
+            width: 38,
+            height: 38,
+            flexShrink: 0,
+            borderRadius: '50%',
+            border: isOpen ? '0px solid var(--line)' : '1px solid var(--line)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: isOpen ? '#fff' : 'var(--fg-faint)',
+            background: isOpen ? 'var(--grad)' : 'transparent',
+            transform: isOpen ? 'rotate(45deg)' : 'rotate(0)',
+            transition: 'all .4s cubic-bezier(.2,.7,.2,1)',
+          }}
+        >
+          <Icon.Plus size={16} />
+        </span>
+      </button>
+      <div
+        style={{
+          maxHeight: isOpen ? 320 : 0,
+          opacity: isOpen ? 1 : 0,
+          overflow: 'hidden',
+          transition: 'max-height .55s cubic-bezier(.2,.7,.2,1), opacity .45s',
+        }}
+      >
+        <p
+          style={{
+            padding: '0 32px 28px',
+            margin: 0,
+            fontSize: 16,
+            lineHeight: 1.6,
+            color: 'var(--fg-dim)',
+            maxWidth: 760,
+          }}
+        >
+          {item.a}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export function FAQ() {
+  const [openIdx, setOpenIdx] = useState<number | null>(0);
+
+  return (
+    <section
+      id="faq"
+      className="sec"
+      style={{
+        background: 'linear-gradient(180deg, var(--bg), var(--bg-2) 50%, var(--bg))',
+      }}
+    >
+      <div className="container">
+        <SectionHeader
+          align="center"
+          eyebrow="Questions, answered"
+          title={
+            <>
+              The short version
+              <br />
+              <span style={{ color: 'var(--fg-dim)' }}>of how we work.</span>
+            </>
+          }
+          sub="If your question isn't here, the intro call is the fastest way to get a real answer."
+        />
+
+        <div
+          style={{
+            maxWidth: 920,
+            margin: '0 auto',
+            borderTop: '1px solid var(--line)',
+            borderRadius: 24,
+            overflow: 'hidden',
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.005))',
+            border: '1px solid var(--line)',
+          }}
+        >
+          {FAQS.map((item, i) => (
+            <FAQItem
+              key={item.q}
+              item={item}
+              isOpen={openIdx === i}
+              onToggle={() => setOpenIdx(openIdx === i ? null : i)}
+            />
+          ))}
+        </div>
+
+        <div
+          style={{
+            marginTop: 48,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 14,
+            flexWrap: 'wrap',
+            color: 'var(--fg-dim)',
+            fontSize: 14,
+          }}
+        >
+          Still curious?
+          <Link
+            to={{ pathname: '/', hash: '#contact' }}
+            className="btn-ghost"
+            style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8 }}
+          >
+            Book a 30-minute intro call <Icon.Arrow size={14} />
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}

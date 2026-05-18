@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Icon } from '@/components/icons/Icon';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { ProjectVisual } from './ProjectVisual';
@@ -61,9 +62,9 @@ export function Work() {
 
         <div className="work-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
           {PROJECTS.map((p, i) => (
-            <a
+            <Link
               key={p.id}
-              href="#"
+              to="/work"
               onMouseEnter={() => setHovered(p.id)}
               onMouseLeave={() => setHovered(null)}
               className="card work-card"
@@ -102,7 +103,7 @@ export function Work() {
                     borderRadius: 6,
                     background: 'rgba(0,0,0,0.4)',
                     backdropFilter: 'blur(6px)',
-                    color: 'var(--fg-dim)',
+                    color: 'rgba(236, 236, 242, 0.62)',
                   }}
                 >
                   {p.category}
@@ -120,6 +121,7 @@ export function Work() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    color: 'rgba(236, 236, 242, 0.62)',
                     border: '1px solid var(--line)',
                     transform: hovered === p.id ? 'rotate(0)' : 'rotate(-45deg)',
                     transition: 'transform .4s cubic-bezier(.2,.7,.2,1)',
@@ -165,14 +167,14 @@ export function Work() {
                   ))}
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 48 }}>
-          <button className="btn-ghost">
+          <Link to="/work" className="btn-ghost" style={{ textDecoration: 'none' }}>
             View all case studies <Icon.Arrow size={16} />
-          </button>
+          </Link>
         </div>
       </div>
     </section>
