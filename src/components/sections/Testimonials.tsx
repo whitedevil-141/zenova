@@ -1,0 +1,267 @@
+import { Icon } from '@/components/icons/Icon';
+
+interface Testimonial {
+  quote: string;
+  name: string;
+  role: string;
+  tone: string;
+}
+
+const ITEMS: Testimonial[] = [
+  {
+    quote:
+      'Zenova replaced three vendors for us. The brand, the site, the content pipeline — all one team, one Slack channel, one invoice.',
+    name: 'Maya Okafor',
+    role: 'COO, Northwind Labs',
+    tone: '#3a5bff',
+  },
+  {
+    quote:
+      "They shipped a working prototype in eleven days. That's the kind of momentum we hadn't felt since the founding team was three people.",
+    name: 'Daniel Reyes',
+    role: 'CEO, Stellar Capital',
+    tone: '#6d4cff',
+  },
+  {
+    quote:
+      'We came in for a website and walked out with a full GTM plan and the first $40k in pipeline. They actually care about the outcome.',
+    name: 'Priya Nair',
+    role: 'Head of Growth, Aperture Health',
+    tone: '#a855f7',
+  },
+  {
+    quote:
+      "The handoff was the cleanest I've ever seen. Our engineers picked up the codebase the next morning and shipped a feature by lunch.",
+    name: 'Jonas Weber',
+    role: 'CTO, Cobalt Studio',
+    tone: '#5b6cff',
+  },
+  {
+    quote:
+      'Two months in, traffic was up 4x and our CAC was down by a third. They run growth the way a product team runs sprints.',
+    name: 'Aisha Mensah',
+    role: 'Founder, Mosaic',
+    tone: '#7a55ff',
+  },
+  {
+    quote:
+      'Most agencies sell a deck. Zenova sold us a system — and then taught our team how to run it ourselves.',
+    name: 'Leo Castelli',
+    role: 'COO, Verge',
+    tone: '#9a4dff',
+  },
+  {
+    quote:
+      'They write better marketing copy than our last three writers combined, and the page actually converts. Wild.',
+    name: 'Sana Iqbal',
+    role: 'CMO, Halcyon',
+    tone: '#4f8cff',
+  },
+  {
+    quote:
+      'From pitch deck to seed close in eleven weeks. I have no idea how we would have done it without them embedded.',
+    name: 'Marcus Lin',
+    role: 'Founder, Lumen',
+    tone: '#8b5cf6',
+  },
+];
+
+function MarqueeRow({
+  items,
+  direction = 'left',
+  speed = 40,
+}: {
+  items: Testimonial[];
+  direction?: 'left' | 'right';
+  speed?: number;
+}) {
+  const seq = [...items, ...items, ...items, ...items];
+  return (
+    <div style={{ overflow: 'hidden' }}>
+      <div
+        className="tm-track"
+        style={{
+          display: 'flex',
+          gap: 20,
+          width: 'max-content',
+          animation: `${direction === 'left' ? 'scroll-left' : 'scroll-right'} ${speed}s linear infinite`,
+          willChange: 'transform',
+        }}
+      >
+        {seq.map((t, i) => (
+          <TestimonialCard key={i} t={t} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TestimonialCard({ t }: { t: Testimonial }) {
+  const initials = t.name
+    .split(' ')
+    .map((p) => p[0])
+    .slice(0, 2)
+    .join('');
+  return (
+    <article
+      style={{
+        width: 'min(440px, 80vw)',
+        flexShrink: 0,
+        padding: 28,
+        borderRadius: 20,
+        background: 'linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.012))',
+        border: '1px solid var(--line)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 20,
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          top: -40,
+          right: -40,
+          width: 160,
+          height: 160,
+          borderRadius: '50%',
+          background: `radial-gradient(circle, ${t.tone}33, transparent 70%)`,
+          pointerEvents: 'none',
+        }}
+      />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative' }}>
+        <span style={{ color: t.tone, opacity: 0.7, lineHeight: 1 }}>
+          <Icon.Quote size={28} />
+        </span>
+        <span style={{ display: 'flex', gap: 1, color: '#fbbf24' }}>
+          {[0, 1, 2, 3, 4].map((i) => (
+            <svg key={i} width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" />
+            </svg>
+          ))}
+        </span>
+      </div>
+      <p style={{ fontSize: 16, lineHeight: 1.55, color: 'var(--fg)', margin: 0, position: 'relative', minHeight: 100 }}>
+        {t.quote}
+      </p>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 'auto', position: 'relative' }}>
+        <div
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: '50%',
+            background: `linear-gradient(135deg, ${t.tone}, var(--accent-3))`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: 'var(--font-display)',
+            fontSize: 13,
+            fontWeight: 600,
+            color: '#fff',
+            boxShadow: `0 6px 14px ${t.tone}55, inset 0 1px 0 rgba(255,255,255,0.25)`,
+          }}
+        >
+          {initials}
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div
+            style={{
+              fontSize: 14,
+              fontWeight: 600,
+              color: 'var(--fg)',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {t.name}
+          </div>
+          <div className="mono" style={{ color: 'var(--fg-faint)', marginTop: 2 }}>
+            {t.role}
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export function Testimonials() {
+  const row1 = ITEMS.slice(0, 4);
+  const row2 = ITEMS.slice(4);
+
+  return (
+    <section
+      id="about"
+      className="sec"
+      style={{
+        borderTop: '1px solid var(--line)',
+        borderBottom: '1px solid var(--line)',
+        paddingTop: 100,
+        paddingBottom: 100,
+        overflow: 'hidden',
+        position: 'relative',
+      }}
+    >
+      <div className="container" style={{ textAlign: 'center', marginBottom: 64 }}>
+        <div
+          className="mono"
+          style={{
+            color: 'var(--fg-faint)',
+            marginBottom: 18,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+          }}
+        >
+          <span style={{ width: 24, height: 1, background: 'var(--accent-2)' }} />
+          What clients say
+          <span style={{ width: 24, height: 1, background: 'var(--accent-2)' }} />
+        </div>
+        <h2 className="display" style={{ fontSize: 'clamp(36px,5vw,68px)', margin: 0, fontWeight: 500 }}>
+          The receipts.
+        </h2>
+        <div
+          style={{
+            marginTop: 22,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 18,
+            padding: '10px 18px',
+            borderRadius: 999,
+            border: '1px solid var(--line)',
+            background: 'rgba(255,255,255,0.02)',
+          }}
+        >
+          <span style={{ display: 'flex', gap: 2, color: '#fbbf24' }}>
+            {[0, 1, 2, 3, 4].map((i) => (
+              <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" />
+              </svg>
+            ))}
+          </span>
+          <span style={{ fontSize: 13, color: 'var(--fg-dim)' }}>
+            <strong style={{ color: 'var(--fg)' }}>4.9</strong> across 38 active clients
+          </span>
+          <span style={{ width: 1, height: 14, background: 'var(--line)' }} />
+          <span style={{ fontSize: 13, color: 'var(--fg-dim)' }}>
+            <strong style={{ color: 'var(--fg)' }}>120+</strong> projects shipped
+          </span>
+        </div>
+      </div>
+
+      <div
+        className="testimonial-marquee"
+        style={{
+          position: 'relative',
+          maskImage: 'linear-gradient(90deg, transparent, black 6%, black 94%, transparent)',
+          WebkitMaskImage: 'linear-gradient(90deg, transparent, black 6%, black 94%, transparent)',
+        }}
+      >
+        <MarqueeRow items={row1} direction="left" speed={42} />
+        <div style={{ height: 18 }} />
+        <MarqueeRow items={row2} direction="right" speed={50} />
+      </div>
+    </section>
+  );
+}

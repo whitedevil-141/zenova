@@ -1,0 +1,180 @@
+import { useState } from 'react';
+import { Icon } from '@/components/icons/Icon';
+import { SectionHeader } from '@/components/ui/SectionHeader';
+import { ProjectVisual } from './ProjectVisual';
+
+interface Project {
+  id: string;
+  client: string;
+  category: string;
+  title: string;
+  tags: string[];
+  tone: string;
+}
+
+const PROJECTS: Project[] = [
+  {
+    id: 'p1',
+    client: 'Northwind Labs',
+    category: 'B2B SaaS',
+    title: 'Repositioning a developer platform around speed.',
+    tags: ['Brand', 'Web', 'Marketing'],
+    tone: '#3a5bff',
+  },
+  {
+    id: 'p2',
+    client: 'Aperture Health',
+    category: 'HealthTech',
+    title: 'A patient portal that actually gets used.',
+    tags: ['Product', 'UX'],
+    tone: '#6d4cff',
+  },
+  {
+    id: 'p3',
+    client: 'Stellar Capital',
+    category: 'Fintech',
+    title: 'From series A pitch to first-customer onboarding.',
+    tags: ['Startup', 'GTM'],
+    tone: '#a855f7',
+  },
+  {
+    id: 'p4',
+    client: 'Cobalt Studio',
+    category: 'Creative',
+    title: 'A content engine producing 4 long-form pieces / wk.',
+    tags: ['Content', 'SEO'],
+    tone: '#4f8cff',
+  },
+];
+
+export function Work() {
+  const [hovered, setHovered] = useState<string | null>(null);
+
+  return (
+    <section id="work" className="sec">
+      <div className="container">
+        <SectionHeader
+          eyebrow="Selected work"
+          title={<>Outcomes we&apos;re proud of.</>}
+          sub="Long-term engagements, not one-night drops. Each engagement spans at least one full quarter."
+        />
+
+        <div className="work-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+          {PROJECTS.map((p, i) => (
+            <a
+              key={p.id}
+              href="#"
+              onMouseEnter={() => setHovered(p.id)}
+              onMouseLeave={() => setHovered(null)}
+              className="card work-card"
+              style={{
+                padding: 28,
+                borderRadius: 24,
+                display: 'flex',
+                flexDirection: 'column',
+                aspectRatio: '5 / 4',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              <div
+                style={{
+                  flex: 1,
+                  borderRadius: 16,
+                  position: 'relative',
+                  overflow: 'hidden',
+                  background: `
+                  linear-gradient(135deg, ${p.tone}40, ${p.tone}10),
+                  repeating-linear-gradient(45deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 12px),
+                  #0a0b13
+                `,
+                  border: '1px solid var(--line)',
+                }}
+              >
+                <ProjectVisual idx={i} tone={p.tone} animate={hovered === p.id} />
+                <div
+                  className="mono"
+                  style={{
+                    position: 'absolute',
+                    top: 14,
+                    left: 14,
+                    padding: '4px 8px',
+                    borderRadius: 6,
+                    background: 'rgba(0,0,0,0.4)',
+                    backdropFilter: 'blur(6px)',
+                    color: 'var(--fg-dim)',
+                  }}
+                >
+                  {p.category}
+                </div>
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 14,
+                    right: 14,
+                    width: 36,
+                    height: 36,
+                    borderRadius: '50%',
+                    background: 'rgba(0,0,0,0.5)',
+                    backdropFilter: 'blur(6px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '1px solid var(--line)',
+                    transform: hovered === p.id ? 'rotate(0)' : 'rotate(-45deg)',
+                    transition: 'transform .4s cubic-bezier(.2,.7,.2,1)',
+                  }}
+                >
+                  <Icon.ArrowUpRight size={16} />
+                </div>
+              </div>
+
+              <div style={{ paddingTop: 22, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span
+                    style={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: '50%',
+                      background: p.tone,
+                      boxShadow: `0 0 10px ${p.tone}`,
+                    }}
+                  />
+                  <span className="mono" style={{ color: 'var(--fg-dim)' }}>
+                    {p.client}
+                  </span>
+                </div>
+                <div className="display" style={{ fontSize: 22, fontWeight: 500, lineHeight: 1.2 }}>
+                  {p.title}
+                </div>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 4 }}>
+                  {p.tags.map((t) => (
+                    <span
+                      key={t}
+                      style={{
+                        padding: '4px 10px',
+                        borderRadius: 999,
+                        fontSize: 12,
+                        border: '1px solid var(--line)',
+                        color: 'var(--fg-dim)',
+                        background: 'rgba(255,255,255,0.02)',
+                      }}
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 48 }}>
+          <button className="btn-ghost">
+            View all case studies <Icon.Arrow size={16} />
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
