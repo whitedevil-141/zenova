@@ -8,7 +8,7 @@ import {
   TweakToggle,
 } from './TweaksPanel';
 import { PALETTES, applyPalette } from '@/lib/palette';
-import type { Tweaks, TweaksSetter, Theme, Background } from '@/types/tweaks';
+import type { Tweaks, TweaksSetter, Theme } from '@/types/tweaks';
 
 interface ZenovaTweaksProps {
   tweaks: Tweaks;
@@ -47,12 +47,6 @@ export function ZenovaTweaks({ tweaks, setTweak }: ZenovaTweaksProps) {
         step={100}
         unit="ms"
         onChange={(v) => setTweak('rotateMs', v)}
-      />
-      <TweakRadio<Background>
-        label="Background"
-        value={tweaks.background}
-        options={['Both', 'Blobs', 'Grid']}
-        onChange={(v) => setTweak('background', v)}
       />
 
       <TweakSection label="Sections" />

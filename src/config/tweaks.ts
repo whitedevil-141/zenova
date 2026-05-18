@@ -9,7 +9,6 @@ export const TWEAK_DEFAULTS: Tweaks = /*EDITMODE-BEGIN*/ {
   palette: ['#3a5bff', '#6d4cff', '#a855f7'],
   theme: 'dark',
   rotateMs: 2400,
-  background: 'Both',
   showMarquee: true,
   showTestimonials: true,
 } /*EDITMODE-END*/;

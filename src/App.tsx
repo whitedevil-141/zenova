@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { Nav } from '@/components/layout/Nav';
 import { Footer } from '@/components/layout/Footer';
 import { Home } from '@/pages/Home';
@@ -10,18 +10,11 @@ import { AboutPage } from '@/pages/AboutPage';
 import { TWEAK_DEFAULTS } from '@/config/tweaks';
 import { useTweaks } from '@/hooks/useTweaks';
 import { applyPalette } from '@/lib/palette';
-import type { Background } from '@/types/tweaks';
 
 // Tweaks panel ships only in dev builds — lazy import is tree-shaken in prod.
 const ZenovaTweaks = import.meta.env.DEV
   ? lazy(() => import('@/dev/ZenovaTweaks').then((m) => ({ default: m.ZenovaTweaks })))
   : null;
-
-const BG_MAP: Record<Background, string> = {
-  Both: 'blobs+grid',
-  Blobs: 'blobs',
-  Grid: 'grid',
-};
 
 export function App() {
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
@@ -55,15 +48,39 @@ export function App() {
         theme={t.theme}
         onToggleTheme={() => setTweak('theme', t.theme === 'dark' ? 'light' : 'dark')}
       />
-      <Routes>
+      <AnimatedRoutes
+        rotateMs={t.rotateMs}
+        showMarquee={t.showMarquee}
+        showTestimonials={t.showTestimonials}
+      />
+      <Footer />
+      {ZenovaTweaks && (
+        <Suspense fallback={null}>
+          <ZenovaTweaks tweaks={t} setTweak={setTweak} />
+        </Suspense>
+      )}
+    </BrowserRouter>
+  );
+}
+
+interface AnimatedRoutesProps {
+  rotateMs: number;
+  showMarquee: boolean;
+  showTestimonials: boolean;
+}
+
+function AnimatedRoutes({ rotateMs, showMarquee, showTestimonials }: AnimatedRoutesProps) {
+  const location = useLocation();
+  return (
+    <div key={location.pathname} className="page-transition">
+      <Routes location={location}>
         <Route
           path="/"
           element={
             <Home
-              rotateMs={t.rotateMs}
-              background={BG_MAP[t.background] ?? 'blobs+grid'}
-              showMarquee={t.showMarquee}
-              showTestimonials={t.showTestimonials}
+              rotateMs={rotateMs}
+              showMarquee={showMarquee}
+              showTestimonials={showTestimonials}
             />
           }
         />
@@ -72,12 +89,6 @@ export function App() {
         <Route path="/work" element={<WorkPage />} />
         <Route path="/about" element={<AboutPage />} />
       </Routes>
-      <Footer />
-      {ZenovaTweaks && (
-        <Suspense fallback={null}>
-          <ZenovaTweaks tweaks={t} setTweak={setTweak} />
-        </Suspense>
-      )}
-    </BrowserRouter>
+    </div>
   );
 }

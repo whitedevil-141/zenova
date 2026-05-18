@@ -12,7 +12,10 @@
       "Bash(powershell *)",
       "Bash(npx tsc *)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(magick -version)",
+      "Bash(python -m pip install --quiet Pillow)",
+      "Bash(python -c ' *)"
     ]
   }
 }

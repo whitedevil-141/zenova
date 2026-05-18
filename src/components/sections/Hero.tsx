@@ -3,7 +3,6 @@ import { RotatingWords } from '@/components/ui/RotatingWords';
 
 interface HeroProps {
   rotateMs: number;
-  background: string;
 }
 
 const SERVICES = [
@@ -21,10 +20,7 @@ const STATS: ReadonlyArray<readonly [string, string]> = [
   ['2026', 'Building since'],
 ];
 
-export function Hero({ rotateMs, background }: HeroProps) {
-  const showBlobs = background.includes('blobs');
-  const showGrid = background.includes('grid');
-
+export function Hero({ rotateMs }: HeroProps) {
   return (
     <section
       id="top"
@@ -40,72 +36,30 @@ export function Hero({ rotateMs, background }: HeroProps) {
       }}
     >
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: -1 }}>
-        {showBlobs && (
-          <>
-            <div
-              style={{
-                position: 'absolute',
-                top: '8%',
-                left: '18%',
-                width: 560,
-                height: 560,
-                borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(58,91,255,0.45), transparent 60%)',
-                filter: 'blur(80px)',
-                animation: 'blob1 22s linear infinite',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                bottom: '2%',
-                right: '8%',
-                width: 520,
-                height: 520,
-                borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(168,85,247,0.4), transparent 60%)',
-                filter: 'blur(80px)',
-                animation: 'blob2 26s linear infinite',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                top: '40%',
-                left: '45%',
-                width: 340,
-                height: 340,
-                borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(109,76,255,0.3), transparent 60%)',
-                filter: 'blur(60px)',
-                animation: 'blob3 18s ease-in-out infinite',
-              }}
-            />
-          </>
-        )}
-        {showGrid && (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              opacity: 0.07,
-              backgroundImage: `
-              linear-gradient(to right, var(--hero-grid) 1px, transparent 1px),
-              linear-gradient(to bottom, var(--hero-grid) 1px, transparent 1px)`,
-              backgroundSize: '72px 72px',
-              maskImage: 'radial-gradient(circle at center, black 10%, transparent 75%)',
-              WebkitMaskImage: 'radial-gradient(circle at center, black 10%, transparent 75%)',
-            }}
-          />
-        )}
         <div
           style={{
             position: 'absolute',
-            inset: 0,
-            opacity: 0.04,
-            backgroundImage: 'radial-gradient(var(--hero-grid) 1px, transparent 1px)',
-            backgroundSize: '3px 3px',
-            mixBlendMode: 'overlay',
+            top: '8%',
+            left: '18%',
+            width: 560,
+            height: 560,
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(58,91,255,0.45), transparent 60%)',
+            filter: 'blur(80px)',
+            animation: 'blob1 22s linear infinite',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '2%',
+            right: '8%',
+            width: 520,
+            height: 520,
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(168,85,247,0.4), transparent 60%)',
+            filter: 'blur(80px)',
+            animation: 'blob2 26s linear infinite',
           }}
         />
       </div>
@@ -180,13 +134,15 @@ export function Hero({ rotateMs, background }: HeroProps) {
             animation: 'fade-up 1.2s cubic-bezier(.2,.7,.2,1) both .3s',
           }}
         >
-          <button className="btn-primary">
+          <button className="btn-primary" onClick={() => (window.location.href = '#contact')}>
             Start a project
             <span style={{ display: 'inline-flex', animation: 'arrow-bounce 1.6s ease-in-out infinite' }}>
               <Icon.Arrow size={16} />
             </span>
           </button>
-          <button className="btn-ghost">Explore services</button>
+          <button className="btn-ghost" onClick={() => (window.location.href = '#services')}>
+            Explore services
+            </button>
         </div>
 
         <div

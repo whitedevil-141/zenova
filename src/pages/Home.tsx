@@ -12,12 +12,11 @@ import { useReveal } from '@/hooks/useReveal';
 
 interface HomeProps {
   rotateMs: number;
-  background: string;
   showMarquee: boolean;
   showTestimonials: boolean;
 }
 
-export function Home({ rotateMs, background, showMarquee, showTestimonials }: HomeProps) {
+export function Home({ rotateMs, showMarquee, showTestimonials }: HomeProps) {
   useReveal([showMarquee, showTestimonials]);
   const location = useLocation();
 
@@ -32,7 +31,7 @@ export function Home({ rotateMs, background, showMarquee, showTestimonials }: Ho
 
   return (
     <>
-      <Hero rotateMs={rotateMs} background={background} />
+      <Hero rotateMs={rotateMs} />
       {showMarquee && <Marquee />}
       <Services />
       <Process />

@@ -56,19 +56,6 @@ export function PageHero({ eyebrow, title, sub, crumbs, meta, secondary }: PageH
             filter: 'blur(80px)',
           }}
         />
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            opacity: 0.06,
-            backgroundImage: `
-              linear-gradient(to right, var(--hero-grid) 1px, transparent 1px),
-              linear-gradient(to bottom, var(--hero-grid) 1px, transparent 1px)`,
-            backgroundSize: '72px 72px',
-            maskImage: 'radial-gradient(circle at 50% 30%, black 0%, transparent 70%)',
-            WebkitMaskImage: 'radial-gradient(circle at 50% 30%, black 0%, transparent 70%)',
-          }}
-        />
       </div>
 
       <div className="container">
