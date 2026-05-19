@@ -25,5 +25,10 @@ pnpm-debug.log*
 *.tsbuildinfo
 .vite/
 
+# Never commit emitted Vite config artifacts. tsc -b used to emit these
+# from vite.config.ts and they would shadow the .ts at build time.
+vite.config.js
+vite.config.d.ts
+
 # Archived pre-refactor sources — kept locally, not for commit
 _legacy/

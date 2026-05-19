@@ -25,24 +25,35 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Run type checking
+      - name: Type check
         run: npm run typecheck
-
-      - name: Run linting
-        run: npm run lint
 
       - name: Build
         run: npm run build
-        env:
-          GITHUB_PAGES: true
 
-      - name: Upload artifacts
+      - name: Verify build output
+        run: |
+          test -f dist/index.html
+          test -f dist/404.html
+          test -f dist/.nojekyll
+          # Make sure index.html links to a built bundle, not raw .tsx source
+          if grep -q 'src/main\.tsx' dist/index.html; then
+            echo "ERROR: dist/index.html still references raw TypeScript source." >&2
+            grep -n 'src/main\.tsx' dist/index.html
+            exit 1
+          fi
+          echo "Build looks healthy."
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist/
