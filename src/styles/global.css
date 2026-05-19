@@ -287,15 +287,11 @@ body {
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease;
-  box-shadow:
-    0 8px 32px rgba(58, 91, 255, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(58, 91, 255, 0.25);
 }
 .btn-primary:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow:
-    0 14px 44px rgba(109, 76, 255, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  box-shadow: 0 14px 44px rgba(109, 76, 255, 0.45);
 }
 .btn-primary::after {
   content: '';
