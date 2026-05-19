@@ -52,7 +52,8 @@ function FAQItem({ item, isOpen, onToggle }: { item: QA; isOpen: boolean; onTogg
             height: 38,
             flexShrink: 0,
             borderRadius: '50%',
-            border: isOpen ? '0px solid var(--line)' : '1px solid var(--line)',
+            border: '1px solid transparent',
+            borderColor: isOpen ? 'transparent' : 'var(--line)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -106,15 +107,15 @@ export function FAQ() {
       <div className="container">
         <SectionHeader
           align="center"
-          eyebrow="Questions, answered"
+          eyebrow="FAQ"
           title={
             <>
-              The short version
+              Common
               <br />
-              <span style={{ color: 'var(--fg-dim)' }}>of how we work.</span>
+              <span style={{ color: 'var(--fg-dim)' }}>questions.</span>
             </>
           }
-          sub="If your question isn't here, the intro call is the fastest way to get a real answer."
+          sub="If you don’t see your question here, just ask."
         />
 
         <div
@@ -150,13 +151,13 @@ export function FAQ() {
             fontSize: 14,
           }}
         >
-          Still curious?
+          More questions?
           <Link
             to={{ pathname: '/', hash: '#contact' }}
             className="btn-ghost"
             style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8 }}
           >
-            Book a 30-minute intro call <Icon.Arrow size={14} />
+            Book a 30-minute call <Icon.Arrow size={14} />
           </Link>
         </div>
       </div>

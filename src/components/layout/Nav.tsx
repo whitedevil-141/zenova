@@ -160,10 +160,10 @@ export function Nav({ theme = 'dark', onToggleTheme }: NavProps) {
                 alignItems: 'center',
                 gap: 8,
                 textDecoration: 'none',
-                boxShadow: '0 4px 18px rgba(58,91,255,0.35), inset 0 1px 0 rgba(255,255,255,0.18)',
+                boxShadow: '0 4px 18px rgba(58,91,255,0.35)',
               }}
             >
-              Start project <Icon.Arrow size={14} />
+              Get in touch <Icon.Arrow size={14} />
             </Link>
           </div>
 
@@ -240,7 +240,7 @@ export function Nav({ theme = 'dark', onToggleTheme }: NavProps) {
                 boxShadow: '0 6px 22px rgba(58,91,255,0.35), inset 0 1px 0 rgba(255,255,255,0.18)',
               }}
             >
-              Start a project <Icon.Arrow size={14} />
+              Get in touch <Icon.Arrow size={14} />
             </Link>
           </div>
         </div>

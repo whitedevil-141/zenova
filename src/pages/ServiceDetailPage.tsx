@@ -67,7 +67,7 @@ export function ServiceDetailPage() {
               }}
             >
               <span style={{ width: 24, height: 1, background: service.hue }} />
-              At a glance
+              Overview
             </div>
             <h2
               className="display"
@@ -152,8 +152,8 @@ export function ServiceDetailPage() {
           <SectionHeader
             align="center"
             eyebrow="What you get"
-            title={<>Deliverables, not deck slides.</>}
-            sub="Every engagement ends with these. They are tools your team keeps using, not artifacts that gather dust."
+            title={<>What you get.</>}
+            sub="Every project ships with these — yours to keep and use."
           />
           <div
             style={{
@@ -200,8 +200,8 @@ export function ServiceDetailPage() {
           <SectionHeader
             align="center"
             eyebrow="How we run it"
-            title={<>Four phases, no surprises.</>}
-            sub="Each phase ends with one tangible artefact you can review. We do not go quiet between them."
+            title={<>How it works.</>}
+            sub="Four simple phases. Each one ends with something you can see and review."
           />
           <div
             style={{
@@ -290,8 +290,8 @@ export function ServiceDetailPage() {
           <div>
             <SectionHeader
               eyebrow="Stack"
-              title={<>The boring tools we trust.</>}
-              sub="We pick the tool that survives a year of growth, not the one trending this quarter."
+              title={<>Tools we use.</>}
+              sub="Reliable, well-known tools. Nothing fancy for the sake of it."
             />
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
               {service.stack.map((s) => (
@@ -328,7 +328,7 @@ export function ServiceDetailPage() {
             }}
           >
             <div className="mono" style={{ color: 'var(--fg-faint)' }}>
-              Headline metric
+              By the numbers
             </div>
             <div
               className="display"
@@ -356,8 +356,8 @@ export function ServiceDetailPage() {
           <SectionHeader
             align="center"
             eyebrow="Packages"
-            title={<>Three honest doors in.</>}
-            sub="Indicative pricing. Final scope is sized in the kickoff working session."
+            title={<>Pricing.</>}
+            sub="Starting prices. We’ll quote the exact scope in our intro call."
           />
           <div
             style={{
@@ -400,7 +400,7 @@ export function ServiceDetailPage() {
                       fontSize: 10,
                     }}
                   >
-                    Most picked
+                    Popular
                   </span>
                 )}
                 <div className="mono" style={{ color: 'var(--fg-faint)' }}>
@@ -464,7 +464,7 @@ export function ServiceDetailPage() {
                   className="btn-ghost"
                   style={{ marginTop: 'auto', textDecoration: 'none', justifyContent: 'center' }}
                 >
-                  Start a conversation
+                  Get in touch
                 </Link>
               </div>
             ))}
@@ -477,7 +477,7 @@ export function ServiceDetailPage() {
           <SectionHeader
             align="center"
             eyebrow="FAQs"
-            title={<>Questions that come up early.</>}
+            title={<>Common questions.</>}
           />
           <div
             style={{
@@ -539,9 +539,9 @@ function RelatedServices({ current }: { current: ServiceDetail }) {
     <section className="sec" style={{ paddingTop: 40 }}>
       <div className="container">
         <SectionHeader
-          eyebrow="Pairs well with"
-          title={<>Often part of the same engagement.</>}
-          sub="The compounding is in the combinations. These are the services that usually ship alongside this one."
+          eyebrow="Other services"
+          title={<>Often paired with this.</>}
+          sub="These services work well together. Most projects combine two or three."
         />
         <div
           style={{

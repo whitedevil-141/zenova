@@ -14,9 +14,9 @@ export function Work() {
     <section id="work" className="sec">
       <div className="container">
         <SectionHeader
-          eyebrow="Selected work"
-          title={<>Outcomes we&apos;re proud of.</>}
-          sub="Long-term engagements, not one-night drops. Each engagement spans at least one full quarter."
+          eyebrow="Our work"
+          title={<>Recent projects.</>}
+          sub="A few examples of what we’ve built and grown."
         />
 
         <div className="work-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
@@ -132,7 +132,7 @@ export function Work() {
 
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 48 }}>
           <Link to="/work" className="btn-ghost" style={{ textDecoration: 'none' }}>
-            View all case studies <Icon.Arrow size={16} />
+            See all projects <Icon.Arrow size={16} />
           </Link>
         </div>
       </div>

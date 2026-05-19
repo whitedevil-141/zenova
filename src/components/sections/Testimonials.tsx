@@ -101,7 +101,7 @@ function TestimonialCard({ t }: { t: Testimonial }) {
             fontSize: 13,
             fontWeight: 600,
             color: '#fff',
-            boxShadow: `0 6px 14px ${t.tone}55, inset 0 1px 0 rgba(255,255,255,0.25)`,
+            boxShadow: `0 6px 14px ${t.tone}55`,
           }}
         >
           {initials}
@@ -163,7 +163,7 @@ export function Testimonials() {
           <span style={{ width: 24, height: 1, background: 'var(--accent-2)' }} />
         </div>
         <h2 className="display" style={{ fontSize: 'clamp(36px,5vw,68px)', margin: 0, fontWeight: 500 }}>
-          The receipts.
+          Kind words.
         </h2>
         <div
           style={{
@@ -185,11 +185,11 @@ export function Testimonials() {
             ))}
           </span>
           <span style={{ fontSize: 13, color: 'var(--fg-dim)' }}>
-            <strong style={{ color: 'var(--fg)' }}>4.9</strong> across 38 active clients
+            <strong style={{ color: 'var(--fg)' }}>4.9</strong> client rating
           </span>
           <span style={{ width: 1, height: 14, background: 'var(--line)' }} />
           <span style={{ fontSize: 13, color: 'var(--fg-dim)' }}>
-            <strong style={{ color: 'var(--fg)' }}>120+</strong> projects shipped
+            <strong style={{ color: 'var(--fg)' }}>20+</strong> projects shipped
           </span>
         </div>
       </div>

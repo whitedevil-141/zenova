@@ -156,7 +156,7 @@ export function PageHero({ eyebrow, title, sub, crumbs, meta, secondary }: PageH
 
         <div style={{ marginTop: meta && meta.length > 0 ? 40 : 56, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
           <Link to="/#contact" className="btn-primary" style={{ textDecoration: 'none' }}>
-            Start a project <Icon.Arrow size={16} />
+            Get in touch <Icon.Arrow size={16} />
           </Link>
           {secondary && (
             <Link to={secondary.to} className="btn-ghost" style={{ textDecoration: 'none' }}>

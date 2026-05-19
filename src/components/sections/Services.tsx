@@ -37,17 +37,16 @@ export function Services() {
               What we do
             </div>
             <h2 className="display" style={{ fontSize: 'clamp(36px,5vw,68px)', margin: 0, fontWeight: 500 }}>
-              Five disciplines.
+              What we do.
               <br />
-              <span style={{ color: 'var(--fg-dim)' }}>One accountable team.</span>
+              <span style={{ color: 'var(--fg-dim)' }}>All under one roof.</span>
             </h2>
           </div>
           <div style={{ maxWidth: 360, color: 'var(--fg-dim)', fontSize: 15, lineHeight: 1.55 }}>
-            Instead of stitching five vendors together, work with one partner that owns the whole arc —
-            from first sketch to scaled outcome.
+            One team. Five services. Pick what you need, or get the whole package.
             <div style={{ display: 'flex', gap: 6, marginTop: 18, alignItems: 'center' }}>
               <span className="mono" style={{ color: 'var(--fg-faint)' }}>
-                HOVER A ROW
+                HOVER TO OPEN
               </span>
               <span style={{ flex: 1, height: 1, background: 'var(--line)' }} />
               <Icon.Arrow size={14} />
@@ -169,7 +168,8 @@ export function Services() {
                       width: 38,
                       height: 38,
                       borderRadius: '50%',
-                      border: isOpen ? '0px solid var(--line)' : '1px solid var(--line)',
+                      border: '1px solid transparent',
+                      borderColor: isOpen ? 'transparent' : 'var(--line)',
                       color: isOpen ? '#fff' : 'var(--fg-faint)',
                       display: 'flex',
                       alignItems: 'center',

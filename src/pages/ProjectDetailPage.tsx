@@ -32,7 +32,7 @@ export function ProjectDetailPage() {
           { label: 'Work', to: '/work' },
           { label: project.client },
         ]}
-        eyebrow={`Case study · ${project.category} · ${project.year}`}
+        eyebrow={`${project.category} · ${project.year}`}
         title={
           <>
             {project.client}
@@ -43,11 +43,11 @@ export function ProjectDetailPage() {
         sub={project.hero}
         meta={[
           [project.metric[0], project.metric[1]],
-          [project.duration, 'Engagement length'],
-          [project.team, 'Team shape'],
-          [project.year, 'Shipped'],
+          [project.duration, 'Duration'],
+          [project.team, 'Team'],
+          [project.year, 'Launched'],
         ]}
-        secondary={{ label: 'Back to all work', to: '/work' }}
+        secondary={{ label: 'Back to work', to: '/work' }}
       />
 
       <section className="sec" style={{ paddingTop: 56 }}>
@@ -190,7 +190,7 @@ export function ProjectDetailPage() {
             </div>
             <div>
               <div className="mono" style={{ color: 'var(--fg-faint)', marginBottom: 8 }}>
-                Engagement
+                Project
               </div>
               <div style={{ color: 'var(--fg)', fontSize: 14, lineHeight: 1.6 }}>
                 {project.duration}
@@ -381,7 +381,7 @@ export function ProjectDetailPage() {
       <section className="sec" style={{ paddingTop: 56 }}>
         <div className="container">
           <SectionHeader
-            eyebrow="Next case study"
+            eyebrow="Next project"
             title={<>{next.client}</>}
             sub={next.summary}
           />
@@ -461,7 +461,7 @@ function NextProjectCard({ project }: { project: ProjectDetail }) {
             color: 'var(--accent-3)',
           }}
         >
-          Read the case study <Icon.Arrow size={12} />
+          See the project <Icon.Arrow size={12} />
         </div>
       </div>
     </Link>

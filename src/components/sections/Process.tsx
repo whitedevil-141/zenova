@@ -14,33 +14,29 @@ const STEPS: Step[] = [
   {
     n: '01',
     title: 'Discover',
-    blurb:
-      'A working session where we map your goals, audience, constraints and existing surface area. We leave with a single-page brief signed off by everyone.',
-    deliverables: ['Stakeholder interviews', 'Product audit', 'Goal & metric framing', 'Project canvas'],
+    blurb: 'A working session to align on your goals, audience, and what success looks like.',
+    deliverables: ['Goals workshop', 'Project plan', 'Timeline', 'Success metrics'],
     timeline: 'Week 1',
   },
   {
     n: '02',
     title: 'Design',
-    blurb:
-      'Brand, IA and product UI converge in one shared file. Daily Loom updates, weekly review. You see the same Figma we do.',
-    deliverables: ['Visual identity system', 'High-fidelity UI', 'Interactive prototype', 'Design QA'],
+    blurb: 'Brand, layout, and product design in one shared file. You see what we see, every day.',
+    deliverables: ['Brand identity', 'Page designs', 'Prototype', 'Design review'],
     timeline: 'Week 2–4',
   },
   {
     n: '03',
     title: 'Build',
-    blurb:
-      'We ship from the same prototype, in small slices. Daily previews, code that you keep and that any future team can read.',
-    deliverables: ['Production codebase', 'CMS & integrations', 'Performance budget', 'Hand-off docs'],
+    blurb: 'We build it in small pieces with weekly demos. Code is yours, written to be easy to maintain.',
+    deliverables: ['Working website', 'CMS setup', 'Speed optimization', 'Handoff docs'],
     timeline: 'Week 4–8',
   },
   {
     n: '04',
     title: 'Grow',
-    blurb:
-      "After launch we don't disappear. Monthly cycles of paid, organic and content work to compound what you just built.",
-    deliverables: ['Paid media', 'SEO & content', 'Lifecycle automations', 'Monthly readout'],
+    blurb: 'After launch we stay involved. Monthly cycles of marketing, SEO, and content to build on what we shipped.',
+    deliverables: ['Ad campaigns', 'SEO & content', 'Email automation', 'Monthly report'],
     timeline: 'Month 2+',
   },
 ];
@@ -66,12 +62,12 @@ export function Process() {
           eyebrow="How we work"
           title={
             <>
-              A predictable rhythm,
+              A simple process,
               <br />
-              <span style={{ color: 'var(--fg-dim)' }}>not a stack of black boxes.</span>
+              <span style={{ color: 'var(--fg-dim)' }}>start to finish.</span>
             </>
           }
-          sub="Same partner, same tools, four phases. Each one ends in something tangible you can review."
+          sub="Four phases. Each one ends in something real you can review."
         />
 
         <div
@@ -125,7 +121,8 @@ export function Process() {
                       width: 34,
                       height: 34,
                       borderRadius: 10,
-                      border: on ? '0px solid var(--line)' : '1px solid var(--line)',
+                      border: '1px solid transparent',
+                      borderColor: on ? 'transparent' : 'var(--line)',
                       background: on ? 'var(--grad)' : 'transparent',
                       color: on ? '#fff' : 'var(--fg-faint)',
                       display: 'flex',

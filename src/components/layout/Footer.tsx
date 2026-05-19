@@ -18,7 +18,7 @@ const COLS: FooterCol[] = [
       { label: 'Web Development', to: { pathname: '/services/web' } },
       { label: 'Marketing', to: { pathname: '/services/marketing' } },
       { label: 'Startup Support', to: { pathname: '/services/startup' } },
-      { label: 'Business Mgmt', to: { pathname: '/services/ops' } },
+      { label: 'Operations', to: { pathname: '/services/ops' } },
       { label: 'Content', to: { pathname: '/services/content' } },
     ],
   },
@@ -28,18 +28,7 @@ const COLS: FooterCol[] = [
       { label: 'About', to: { pathname: '/about' } },
       { label: 'Work', to: { pathname: '/work' } },
       { label: 'Process', to: { pathname: '/process' } },
-      { label: 'Careers', to: { pathname: '/about' } },
       { label: 'Contact', to: { pathname: '/', hash: '#contact' } },
-    ],
-  },
-  {
-    title: 'Resources',
-    links: [
-      { label: 'Playbook', to: { pathname: '/process' } },
-      { label: 'Pricing', to: { pathname: '/services' } },
-      { label: 'FAQ', to: { pathname: '/', hash: '#faq' } },
-      { label: 'Newsletter', to: { pathname: '/', hash: '#contact' } },
-      { label: 'Press', to: { pathname: '/about' } },
     ],
   },
 ];
@@ -50,11 +39,11 @@ export function Footer() {
   return (
     <footer style={{ borderTop: '1px solid var(--line)', padding: '72px 0 32px', position: 'relative' }}>
       <div className="container">
-        <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '1.4fr repeat(3, 1fr)', gap: 48 }}>
+        <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '1.4fr repeat(2, 1fr)', gap: 48 }}>
           <div>
             <Logo size={25} />
             <p style={{ color: 'var(--fg-dim)', fontSize: 14, lineHeight: 1.55, marginTop: 22, maxWidth: 320 }}>
-              An independent studio building the design, code and growth motion behind modern businesses.
+              A small team that designs, builds, and grows modern businesses.
             </p>
             <div style={{ display: 'flex', gap: 10, marginTop: 24 }}>
               {SOCIAL.map((s) => (
@@ -115,10 +104,10 @@ export function Footer() {
           }}
         >
           <div className="mono" style={{ color: 'var(--fg-faint)' }}>
-            © 2026 Zenova Studio · All systems operational
+            © 2026 Zenova
           </div>
           <div className="mono" style={{ color: 'var(--fg-faint)' }}>
-            Made with care · Brooklyn ↔ Berlin
+            Brooklyn · Berlin
           </div>
         </div>
       </div>

@@ -23,22 +23,22 @@ export function WorkPage() {
     <>
       <PageHero
         crumbs={[{ label: 'Home', to: '/' }, { label: 'Work' }]}
-        eyebrow="Selected work"
+        eyebrow="Our work"
         title={
           <>
-            Outcomes,
+            Real projects.
             <br />
-            <span style={{ color: 'var(--fg-dim)' }}>not screenshots.</span>
+            <span style={{ color: 'var(--fg-dim)' }}>Real results.</span>
           </>
         }
-        sub="Long-term engagements spanning at least a full quarter. Every case study leads with a number, not a hero shot."
+        sub="A few of the businesses we’ve helped. Each story leads with the numbers."
         meta={[
-          ['120+', 'Projects shipped'],
-          ['38', 'Active clients'],
-          ['7 yr', 'Avg client tenure'],
+          ['20+', 'Projects shipped'],
+          ['8', 'Active clients'],
           ['4.9 / 5', 'Client rating'],
+          ['100%', 'On time'],
         ]}
-        secondary={{ label: 'About the team', to: '/about' }}
+        secondary={{ label: 'About us', to: '/about' }}
       />
 
       <section className="sec" style={{ paddingTop: 80 }}>
@@ -54,7 +54,7 @@ export function WorkPage() {
             }}
           >
             <div className="mono" style={{ color: 'var(--fg-faint)' }}>
-              {filtered.length} case studies
+              {filtered.length} {filtered.length === 1 ? 'project' : 'projects'}
             </div>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
               {FILTERS.map((f) => {
@@ -66,7 +66,8 @@ export function WorkPage() {
                     style={{
                       padding: '8px 14px',
                       borderRadius: 999,
-                      border: on ? '0px solid var(--line)' : '1px solid var(--line)',
+                      border: '1px solid transparent',
+                      borderColor: on ? 'transparent' : 'var(--line)',
                       background: on ? 'var(--grad)' : 'rgba(255,255,255,0.02)',
                       color: on ? '#fff' : 'var(--fg-dim)',
                       fontSize: 13,
@@ -239,7 +240,7 @@ export function WorkPage() {
                 borderRadius: 20,
               }}
             >
-              No case studies in this category yet — drop us a note and we'll send the rest.
+              Nothing in this category yet. Get in touch and we'll send more examples.
             </div>
           )}
         </div>

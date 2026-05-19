@@ -15,7 +15,7 @@ export function Marquee() {
     >
       <div className="container" style={{ display: 'flex', alignItems: 'center', gap: 32, flexWrap: 'wrap' }}>
         <div className="mono" style={{ color: 'var(--fg-faint)', flexShrink: 0, maxWidth: 200 }}>
-          Trusted by teams shipping at scale
+          What we do
         </div>
         <div
           style={{

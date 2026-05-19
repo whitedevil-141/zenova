@@ -14,90 +14,35 @@ interface Value {
 
 const VALUES: Value[] = [
   {
-    icon: 'Spark',
-    title: 'Make the thing, then talk about it',
-    blurb:
-      "We'd rather ship a rough prototype than write a perfect deck about one. Decisions get cheaper the moment something exists.",
+    icon: 'Layers',
+    title: 'One team, start to finish',
+    blurb: 'The people you meet on day one are the same people on day ninety. No handoffs.',
     hue: '#3a5bff',
   },
   {
-    icon: 'Layers',
-    title: 'One team, one accountability line',
-    blurb:
-      'No matrix, no producers between you and the people doing the work. The senior on the kickoff call is the senior on month twelve.',
+    icon: 'Spark',
+    title: 'Build, then talk',
+    blurb: 'We ship working things, not decks about working things.',
     hue: '#6d4cff',
   },
   {
     icon: 'Compass',
-    title: 'Calibrate to outcomes, not artifacts',
-    blurb:
-      "Every quarter we re-ask whether the deliverable is still the right one. We've killed our own decks more than once.",
+    title: 'Outcomes over output',
+    blurb: 'Every project ends with one number we agreed to move. We share it either way.',
     hue: '#a855f7',
   },
-  {
-    icon: 'Check',
-    title: 'Boring infrastructure, ambitious surface',
-    blurb:
-      'We pick the dependable tool for the engine and spend the saved time where users actually feel the difference.',
-    hue: '#4f8cff',
-  },
-];
-
-
-interface Manifesto {
-  n: string;
-  title: string;
-  body: string;
-}
-
-const MANIFESTO: Manifesto[] = [
-  {
-    n: '01',
-    title: 'Make the seams the product',
-    body: 'The work between vendors is where projects die. We treat the seams — brand into product, product into growth — as the actual deliverable.',
-  },
-  {
-    n: '02',
-    title: 'Stay small. Get senior',
-    body: 'Eighteen people. Average tenure: nine years in the craft. We do not staff against headcount; we staff against the work.',
-  },
-  {
-    n: '03',
-    title: 'Keep the client in the file',
-    body: 'Our Figma is your Figma. Our repo is your repo. There is no version that lives only on our laptops.',
-  },
-  {
-    n: '04',
-    title: 'End with a number',
-    body: 'Every engagement ends with one metric we agreed to move. We publish it — wins and misses — so the next engagement starts honest.',
-  },
-];
-
-interface Press {
-  outlet: string;
-  quote: string;
-}
-
-const PRESS: Press[] = [
-  { outlet: 'Fast Company', quote: '"The studio operators quietly hire before everyone else does."' },
-  { outlet: 'A List Apart', quote: '"A boring tech stack, an ambitious design surface, a real practice."' },
-  { outlet: 'Sidebar', quote: '"Quiet, opinionated work — featured every other week, on purpose."' },
-  { outlet: 'It\'s Nice That', quote: '"A fluency across brand, build and growth most studios still treat as separate."' },
 ];
 
 interface Role {
   title: string;
-  team: string;
   location: string;
 }
 
 const ROLES: Role[] = [
-  { title: 'Senior product designer', team: 'Design', location: 'Brooklyn / Remote' },
-  { title: 'Staff engineer (Next.js)', team: 'Engineering', location: 'Berlin / Remote' },
-  { title: 'Growth strategist', team: 'Growth', location: 'Remote (US / EU)' },
-  { title: 'Editor', team: 'Content', location: 'Remote (US / EU)' },
+  { title: 'Senior product designer', location: 'Remote' },
+  { title: 'Senior engineer', location: 'Remote' },
+  { title: 'Growth strategist', location: 'Remote' },
 ];
-
 
 interface Milestone {
   year: string;
@@ -105,10 +50,10 @@ interface Milestone {
 }
 
 const TIMELINE: Milestone[] = [
-  { year: '2019', what: 'Mira and Tobias spin Zenova out of a Friday night brand sprint for a friend.' },
-  { year: '2021', what: 'First retained engagement crosses one year. The Grow phase becomes a real practice.' },
-  { year: '2023', what: 'Editorial and ops teams join. We stop calling ourselves "the studio that also codes."' },
-  { year: '2025', what: '38 active clients, 120+ shipped projects, still one Slack channel per engagement.' },
+  { year: '2019', what: 'Mira and Tobias start Zenova.' },
+  { year: '2021', what: 'First long-term client. Growth becomes a core practice.' },
+  { year: '2023', what: 'Content and operations teams join.' },
+  { year: '2026', what: 'Working with 8 active clients across 3 continents.' },
 ];
 
 export function AboutPage() {
@@ -124,22 +69,22 @@ export function AboutPage() {
     <>
       <PageHero
         crumbs={[{ label: 'Home', to: '/' }, { label: 'About' }]}
-        eyebrow="About Zenova"
+        eyebrow="About"
         title={
           <>
-            A small studio
+            A small team
             <br />
-            <span style={{ color: 'var(--fg-dim)' }}>doing the whole arc.</span>
+            <span style={{ color: 'var(--fg-dim)' }}>doing big work.</span>
           </>
         }
-        sub="We started in 2019 with one belief: handoff is where most digital work goes to die. Everything we build is structured to keep one team accountable from sketch to scaled outcome."
+        sub="We're a small studio that handles design, development, and growth — all under one roof."
         meta={[
           ['2019', 'Founded'],
-          ['18', 'People'],
-          ['Brooklyn ↔ Berlin', 'Time zones'],
-          ['7 yr', 'Avg client tenure'],
+          ['18', 'Team'],
+          ['2', 'Cities'],
+          ['8', 'Active clients'],
         ]}
-        secondary={{ label: 'See selected work', to: '/work' }}
+        secondary={{ label: 'See our work', to: '/work' }}
       />
 
       <section className="sec" style={{ paddingTop: 80 }}>
@@ -156,7 +101,7 @@ export function AboutPage() {
               }}
             >
               <span style={{ width: 24, height: 1, background: 'var(--accent-2)' }} />
-              The story
+              Our story
             </div>
             <h2 className="display" style={{ fontSize: 'clamp(32px,4vw,52px)', margin: 0, fontWeight: 500 }}>
               We built the studio
@@ -166,89 +111,11 @@ export function AboutPage() {
           </div>
           <div style={{ color: 'var(--fg-dim)', fontSize: 16, lineHeight: 1.7 }}>
             <p style={{ margin: '0 0 18px' }}>
-              Most of our founding clients were operators who kept telling the same story: a brand agency had
-              done a great deck, a dev shop had built half a product, and the marketing vendor was running ads
-              for a positioning everyone had moved on from. The work was good in pieces and broken at the
-              seams.
+              Most of our early clients told us the same story: their brand agency made a great deck, their dev shop built half a product, and their marketing vendor was promoting old messaging.
             </p>
             <p style={{ margin: 0 }}>
-              Zenova exists because we think the seams are the actual product. So we keep one team on the
-              whole arc — design, build, grow — and price it like an engagement, not a SKU.
+              So we started Zenova to do all of it — design, build, and growth — with one team that stays involved from start to finish.
             </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="sec" style={{ paddingTop: 40 }}>
-        <div className="container">
-          <SectionHeader
-            align="center"
-            eyebrow="Manifesto"
-            title={<>Four lines we keep on the studio wall.</>}
-            sub="A working document. We re-read it every quarter and edit it when we are honest about drift."
-          />
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: 16,
-            }}
-          >
-            {MANIFESTO.map((m, i) => (
-              <div
-                key={m.n}
-                className="card"
-                style={{
-                  position: 'relative',
-                  padding: 32,
-                  borderRadius: 22,
-                  border: '1px solid var(--line)',
-                  background:
-                    'linear-gradient(160deg, rgba(58,91,255,0.10), rgba(168,85,247,0.04) 60%, rgba(255,255,255,0.01))',
-                  overflow: 'hidden',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 14,
-                  minHeight: 220,
-                }}
-              >
-                <div
-                  className="display"
-                  style={{
-                    position: 'absolute',
-                    right: 14,
-                    bottom: -28,
-                    fontSize: 140,
-                    fontWeight: 600,
-                    color: 'rgba(255,255,255,0.04)',
-                    lineHeight: 1,
-                    pointerEvents: 'none',
-                  }}
-                >
-                  {m.n}
-                </div>
-                <div
-                  className="mono"
-                  style={{ color: 'var(--accent-3)', fontSize: 12, letterSpacing: '0.12em' }}
-                >
-                  {String(i + 1).padStart(2, '0')}
-                </div>
-                <h3 className="display" style={{ margin: 0, fontSize: 22, fontWeight: 500 }}>
-                  {m.title}
-                </h3>
-                <p
-                  style={{
-                    margin: 0,
-                    color: 'var(--fg-dim)',
-                    fontSize: 15,
-                    lineHeight: 1.6,
-                    position: 'relative',
-                  }}
-                >
-                  {m.body}
-                </p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -258,8 +125,8 @@ export function AboutPage() {
           <SectionHeader
             align="center"
             eyebrow="What we believe"
-            title={<>Four things we don&apos;t negotiate on.</>}
-            sub="These show up in every engagement, regardless of size. If we drift, the client is supposed to notice and call it out."
+            title={<>Three things we don&apos;t change.</>}
+            sub="These show up in every project, big or small."
           />
           <div
             style={{
@@ -316,9 +183,9 @@ export function AboutPage() {
         <div className="container">
           <SectionHeader
             align="center"
-            eyebrow="The people"
-            title={<>Senior on day one. Senior on month twelve.</>}
-            sub="The team you meet on the intro call is the team that ships the work. No bait-and-switch staffing."
+            eyebrow="The team"
+            title={<>Meet the team.</>}
+            sub="The people you meet on day one are the same people who do the work."
           />
           <div
             style={{
@@ -329,7 +196,7 @@ export function AboutPage() {
           >
             {TEAM.map((m) => (
               <div
-                key={m.name}
+                key={m.id}
                 className="card"
                 style={{
                   padding: 28,
@@ -368,7 +235,7 @@ export function AboutPage() {
                     fontWeight: 600,
                     fontSize: 18,
                     color: '#fff',
-                    boxShadow: `0 8px 20px ${m.tone}55, inset 0 1px 0 rgba(255,255,255,0.25)`,
+                    boxShadow: `0 8px 20px ${m.tone}55`,
                     position: 'relative',
                   }}
                 >
@@ -404,7 +271,7 @@ export function AboutPage() {
           <SectionHeader
             align="center"
             eyebrow="Milestones"
-            title={<>Seven years, no rebrand.</>}
+            title={<>A short history.</>}
           />
           <div
             style={{
@@ -440,54 +307,6 @@ export function AboutPage() {
                   {m.year}
                 </div>
                 <div style={{ color: 'var(--fg-dim)', fontSize: 15, lineHeight: 1.6 }}>{m.what}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="sec" style={{ paddingTop: 40 }}>
-        <div className="container">
-          <SectionHeader
-            align="center"
-            eyebrow="Press"
-            title={<>Mentioned, occasionally.</>}
-            sub="We do not pitch press. Most of these found us through clients or through the work itself."
-          />
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-              gap: 14,
-            }}
-          >
-            {PRESS.map((p) => (
-              <div
-                key={p.outlet}
-                className="card"
-                style={{
-                  padding: 24,
-                  borderRadius: 18,
-                  border: '1px solid var(--line)',
-                  background:
-                    'linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.005))',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 12,
-                }}
-              >
-                <div
-                  className="mono"
-                  style={{ color: 'var(--accent-3)', letterSpacing: '0.12em' }}
-                >
-                  {p.outlet}
-                </div>
-                <div
-                  className="display"
-                  style={{ fontSize: 16, fontWeight: 500, lineHeight: 1.4, color: 'var(--fg)' }}
-                >
-                  {p.quote}
-                </div>
               </div>
             ))}
           </div>
@@ -532,9 +351,7 @@ export function AboutPage() {
                 className="display"
                 style={{ margin: 0, fontSize: 'clamp(28px, 3vw, 38px)', fontWeight: 500 }}
               >
-                Senior practice,
-                <br />
-                <span style={{ color: 'var(--fg-dim)' }}>tiny team.</span>
+                Want to work with us?
               </h2>
               <p
                 style={{
@@ -545,8 +362,7 @@ export function AboutPage() {
                   maxWidth: 380,
                 }}
               >
-                We hire slowly and rarely. When we do, we look for people who have led the
-                practice somewhere else and want to keep doing the work — not just managing it.
+                We hire when we have the right work. Open roles below — or send us a note any time.
               </p>
               <div
                 style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 24 }}
@@ -595,14 +411,14 @@ export function AboutPage() {
                   color: 'var(--accent-3)',
                 }}
               >
-                Or write to us: {brand.careersEmail} <Icon.Arrow size={12} />
+                Email us: {brand.careersEmail} <Icon.Arrow size={12} />
               </a>
             </div>
           </div>
 
           <div>
             <div className="mono" style={{ color: 'var(--fg-faint)', marginBottom: 12 }}>
-              Where we work
+              Where we are
             </div>
             <h2
               className="display"
@@ -610,7 +426,7 @@ export function AboutPage() {
             >
               Two cities,
               <br />
-              <span style={{ color: 'var(--fg-dim)' }}>one calendar.</span>
+              <span style={{ color: 'var(--fg-dim)' }}>one team.</span>
             </h2>
             <p
               style={{
@@ -621,13 +437,12 @@ export function AboutPage() {
                 maxWidth: 420,
               }}
             >
-              We overlap five hours a day across the two hubs and meet in person every quarter.
-              Clients usually pick the time zone, never both.
+              We work across two main cities and overlap a few hours each day.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {LOCATIONS.map((l) => (
                 <div
-                  key={l.city}
+                  key={l.id}
                   className="card"
                   style={{
                     padding: '18px 22px',

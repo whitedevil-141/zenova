@@ -15,23 +15,20 @@ interface Pillar {
 const PILLARS: Pillar[] = [
   {
     tag: 'Build',
-    title: 'Engineering you can read',
-    blurb:
-      'Production codebases on Next.js, TypeScript and a CMS your team can actually edit. We hand over the keys at launch.',
+    title: 'Design + Development',
+    blurb: 'Websites, web apps, and brands — built to last and easy to maintain.',
     hue: '#3a5bff',
   },
   {
     tag: 'Grow',
-    title: 'Demand, not just deliverables',
-    blurb:
-      'Performance SEO, paid media and lifecycle programs wired to a single pipeline dashboard the whole team trusts.',
+    title: 'Marketing + Content',
+    blurb: 'Get more customers with SEO, ads, and content that actually works.',
     hue: '#6d4cff',
   },
   {
-    tag: 'Operate',
-    title: 'Fractional ops in the same room',
-    blurb:
-      'Tooling, playbooks and weekly cadence so a small team runs like one twice its size — without adding headcount.',
+    tag: 'Run',
+    title: 'Operations + Support',
+    blurb: 'Better tools and processes so your team can scale faster.',
     hue: '#a855f7',
   },
 ];
@@ -48,28 +45,28 @@ export function ServicesPage() {
         eyebrow="Services"
         title={
           <>
-            Five disciplines.
+            Five services.
             <br />
-            <span style={{ color: 'var(--fg-dim)' }}>One accountable team.</span>
+            <span style={{ color: 'var(--fg-dim)' }}>One team.</span>
           </>
         }
-        sub="Stop stitching five vendors together. We own the full arc — brand, web, growth, content and ops — and ship it with the same engineers from kickoff to month twelve."
+        sub="Everything you need to design, build, and grow your business — without juggling agencies."
         meta={[
-          ['5', 'Core disciplines'],
-          ['120+', 'Projects shipped'],
-          ['<1.2s', 'Median LCP'],
+          ['5', 'Services'],
+          ['20+', 'Projects shipped'],
           ['4.9 / 5', 'Client rating'],
+          ['6 – 10 wks', 'Typical build'],
         ]}
-        secondary={{ label: 'How we work', to: '/process' }}
+        secondary={{ label: 'See our process', to: '/process' }}
       />
 
       <section className="sec" style={{ paddingTop: 80 }}>
         <div className="container">
           <SectionHeader
             align="center"
-            eyebrow="The three pillars"
-            title={<>Different skills, same playbook.</>}
-            sub="Every engagement leans on at least two of these. The combinations are what compounds."
+            eyebrow="What we do"
+            title={<>Three areas, one team.</>}
+            sub="Most projects combine two or three. Scroll down to see all five services in detail."
           />
           <div
             style={{
@@ -153,7 +150,7 @@ export function ServicesPage() {
                     position: 'relative',
                   }}
                 >
-                  Scroll for the full menu <Icon.Chevron size={12} dir="down" />
+                  See all services <Icon.Chevron size={12} dir="down" />
                 </div>
               </div>
             ))}
