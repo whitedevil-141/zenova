@@ -79,6 +79,100 @@ const TEAM: Member[] = [
     initials: 'JW',
     tone: '#7a55ff',
   },
+  {
+    name: 'Noor Bashir',
+    role: 'Principal engineer',
+    bio: 'Built design systems at Notion and Vercel. Leads the build squad and on-call rotation.',
+    initials: 'NB',
+    tone: '#4f8cff',
+  },
+  {
+    name: 'Eitan Brody',
+    role: 'Brand director',
+    bio: 'Founder of two studios before Zenova. Logos, type and motion direction.',
+    initials: 'EB',
+    tone: '#5b6cff',
+  },
+  {
+    name: 'Yuki Sato',
+    role: 'Head of operations',
+    bio: 'Ex-COO at a Series B fintech. Owns the fractional-ops practice and our internal cadence.',
+    initials: 'YS',
+    tone: '#6d4cff',
+  },
+  {
+    name: 'Cassidy Lam',
+    role: 'Producer',
+    bio: 'Holds every engagement together. The voice on Friday demos, the calendar on Monday plans.',
+    initials: 'CL',
+    tone: '#9a4dff',
+  },
+];
+
+interface Manifesto {
+  n: string;
+  title: string;
+  body: string;
+}
+
+const MANIFESTO: Manifesto[] = [
+  {
+    n: '01',
+    title: 'Make the seams the product',
+    body: 'The work between vendors is where projects die. We treat the seams — brand into product, product into growth — as the actual deliverable.',
+  },
+  {
+    n: '02',
+    title: 'Stay small. Get senior',
+    body: 'Eighteen people. Average tenure: nine years in the craft. We do not staff against headcount; we staff against the work.',
+  },
+  {
+    n: '03',
+    title: 'Keep the client in the file',
+    body: 'Our Figma is your Figma. Our repo is your repo. There is no version that lives only on our laptops.',
+  },
+  {
+    n: '04',
+    title: 'End with a number',
+    body: 'Every engagement ends with one metric we agreed to move. We publish it — wins and misses — so the next engagement starts honest.',
+  },
+];
+
+interface Press {
+  outlet: string;
+  quote: string;
+}
+
+const PRESS: Press[] = [
+  { outlet: 'Fast Company', quote: '"The studio operators quietly hire before everyone else does."' },
+  { outlet: 'A List Apart', quote: '"A boring tech stack, an ambitious design surface, a real practice."' },
+  { outlet: 'Sidebar', quote: '"Quiet, opinionated work — featured every other week, on purpose."' },
+  { outlet: 'It\'s Nice That', quote: '"A fluency across brand, build and growth most studios still treat as separate."' },
+];
+
+interface Role {
+  title: string;
+  team: string;
+  location: string;
+}
+
+const ROLES: Role[] = [
+  { title: 'Senior product designer', team: 'Design', location: 'Brooklyn / Remote' },
+  { title: 'Staff engineer (Next.js)', team: 'Engineering', location: 'Berlin / Remote' },
+  { title: 'Growth strategist', team: 'Growth', location: 'Remote (US / EU)' },
+  { title: 'Editor', team: 'Content', location: 'Remote (US / EU)' },
+];
+
+interface Location {
+  city: string;
+  tz: string;
+  detail: string;
+}
+
+const LOCATIONS: Location[] = [
+  { city: 'Brooklyn, NY', tz: 'UTC −4', detail: 'HQ · 12 people · founding studio' },
+  { city: 'Berlin', tz: 'UTC +2', detail: '6 people · EU client base, engineering core' },
+  { city: 'Remote', tz: '—', detail: 'Time zones permitting, hire anywhere' },
 ];
 
 interface Milestone {
@@ -153,6 +247,80 @@ export function AboutPage() {
               Zenova exists because we think the seams are the actual product. So we keep one team on the
               whole arc — design, build, grow — and price it like an engagement, not a SKU.
             </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="sec" style={{ paddingTop: 40 }}>
+        <div className="container">
+          <SectionHeader
+            align="center"
+            eyebrow="Manifesto"
+            title={<>Four lines we keep on the studio wall.</>}
+            sub="A working document. We re-read it every quarter and edit it when we are honest about drift."
+          />
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              gap: 16,
+            }}
+          >
+            {MANIFESTO.map((m, i) => (
+              <div
+                key={m.n}
+                className="card"
+                style={{
+                  position: 'relative',
+                  padding: 32,
+                  borderRadius: 22,
+                  border: '1px solid var(--line)',
+                  background:
+                    'linear-gradient(160deg, rgba(58,91,255,0.10), rgba(168,85,247,0.04) 60%, rgba(255,255,255,0.01))',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 14,
+                  minHeight: 220,
+                }}
+              >
+                <div
+                  className="display"
+                  style={{
+                    position: 'absolute',
+                    right: 14,
+                    bottom: -28,
+                    fontSize: 140,
+                    fontWeight: 600,
+                    color: 'rgba(255,255,255,0.04)',
+                    lineHeight: 1,
+                    pointerEvents: 'none',
+                  }}
+                >
+                  {m.n}
+                </div>
+                <div
+                  className="mono"
+                  style={{ color: 'var(--accent-3)', fontSize: 12, letterSpacing: '0.12em' }}
+                >
+                  {String(i + 1).padStart(2, '0')}
+                </div>
+                <h3 className="display" style={{ margin: 0, fontSize: 22, fontWeight: 500 }}>
+                  {m.title}
+                </h3>
+                <p
+                  style={{
+                    margin: 0,
+                    color: 'var(--fg-dim)',
+                    fontSize: 15,
+                    lineHeight: 1.6,
+                    position: 'relative',
+                  }}
+                >
+                  {m.body}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -346,6 +514,231 @@ export function AboutPage() {
                 <div style={{ color: 'var(--fg-dim)', fontSize: 15, lineHeight: 1.6 }}>{m.what}</div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="sec" style={{ paddingTop: 40 }}>
+        <div className="container">
+          <SectionHeader
+            align="center"
+            eyebrow="Press"
+            title={<>Mentioned, occasionally.</>}
+            sub="We do not pitch press. Most of these found us through clients or through the work itself."
+          />
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+              gap: 14,
+            }}
+          >
+            {PRESS.map((p) => (
+              <div
+                key={p.outlet}
+                className="card"
+                style={{
+                  padding: 24,
+                  borderRadius: 18,
+                  border: '1px solid var(--line)',
+                  background:
+                    'linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.005))',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 12,
+                }}
+              >
+                <div
+                  className="mono"
+                  style={{ color: 'var(--accent-3)', letterSpacing: '0.12em' }}
+                >
+                  {p.outlet}
+                </div>
+                <div
+                  className="display"
+                  style={{ fontSize: 16, fontWeight: 500, lineHeight: 1.4, color: 'var(--fg)' }}
+                >
+                  {p.quote}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="sec" style={{ paddingTop: 40 }}>
+        <div
+          className="container"
+          style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40 }}
+        >
+          <div
+            className="card"
+            style={{
+              padding: 36,
+              borderRadius: 24,
+              border: '1px solid var(--line-strong)',
+              background:
+                'linear-gradient(135deg, rgba(58,91,255,0.18), rgba(168,85,247,0.10) 60%, rgba(255,255,255,0.02))',
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+          >
+            <div
+              style={{
+                position: 'absolute',
+                top: -60,
+                right: -60,
+                width: 280,
+                height: 280,
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(168,85,247,0.4), transparent 60%)',
+                filter: 'blur(60px)',
+                pointerEvents: 'none',
+              }}
+            />
+            <div style={{ position: 'relative' }}>
+              <div className="mono" style={{ color: 'var(--fg-faint)', marginBottom: 12 }}>
+                Careers
+              </div>
+              <h2
+                className="display"
+                style={{ margin: 0, fontSize: 'clamp(28px, 3vw, 38px)', fontWeight: 500 }}
+              >
+                Senior practice,
+                <br />
+                <span style={{ color: 'var(--fg-dim)' }}>tiny team.</span>
+              </h2>
+              <p
+                style={{
+                  margin: '18px 0 24px',
+                  color: 'var(--fg-dim)',
+                  fontSize: 15,
+                  lineHeight: 1.6,
+                  maxWidth: 380,
+                }}
+              >
+                We hire slowly and rarely. When we do, we look for people who have led the
+                practice somewhere else and want to keep doing the work — not just managing it.
+              </p>
+              <div
+                style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 24 }}
+              >
+                {ROLES.map((r) => (
+                  <a
+                    key={r.title}
+                    href="#"
+                    onClick={(e) => e.preventDefault()}
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr auto auto',
+                      gap: 18,
+                      alignItems: 'center',
+                      padding: '14px 18px',
+                      borderRadius: 14,
+                      border: '1px solid var(--line)',
+                      background: 'rgba(0,0,0,0.18)',
+                      textDecoration: 'none',
+                      color: 'var(--fg)',
+                      fontSize: 14,
+                    }}
+                  >
+                    <span>{r.title}</span>
+                    <span
+                      className="mono"
+                      style={{
+                        color: 'var(--fg-faint)',
+                        fontSize: 11,
+                        letterSpacing: '0.1em',
+                      }}
+                    >
+                      {r.location}
+                    </span>
+                    <Icon.Arrow size={14} />
+                  </a>
+                ))}
+              </div>
+              <a
+                href="mailto:careers@zenova.studio"
+                className="mono"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  color: 'var(--accent-3)',
+                }}
+              >
+                Or write to us: careers@zenova.studio <Icon.Arrow size={12} />
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <div className="mono" style={{ color: 'var(--fg-faint)', marginBottom: 12 }}>
+              Where we work
+            </div>
+            <h2
+              className="display"
+              style={{ margin: 0, fontSize: 'clamp(28px, 3vw, 38px)', fontWeight: 500 }}
+            >
+              Two cities,
+              <br />
+              <span style={{ color: 'var(--fg-dim)' }}>one calendar.</span>
+            </h2>
+            <p
+              style={{
+                margin: '18px 0 24px',
+                color: 'var(--fg-dim)',
+                fontSize: 15,
+                lineHeight: 1.6,
+                maxWidth: 420,
+              }}
+            >
+              We overlap five hours a day across the two hubs and meet in person every quarter.
+              Clients usually pick the time zone, never both.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {LOCATIONS.map((l) => (
+                <div
+                  key={l.city}
+                  className="card"
+                  style={{
+                    padding: '18px 22px',
+                    borderRadius: 16,
+                    border: '1px solid var(--line)',
+                    background:
+                      'linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.005))',
+                    display: 'grid',
+                    gridTemplateColumns: '1fr auto',
+                    gap: 14,
+                    alignItems: 'center',
+                  }}
+                >
+                  <div>
+                    <div className="display" style={{ fontSize: 18, fontWeight: 500 }}>
+                      {l.city}
+                    </div>
+                    <div
+                      style={{ color: 'var(--fg-dim)', fontSize: 13, marginTop: 4 }}
+                    >
+                      {l.detail}
+                    </div>
+                  </div>
+                  <div
+                    className="mono"
+                    style={{
+                      padding: '6px 12px',
+                      borderRadius: 999,
+                      border: '1px solid var(--line)',
+                      background: 'rgba(255,255,255,0.025)',
+                      color: 'var(--fg)',
+                      fontSize: 11,
+                    }}
+                  >
+                    {l.tz}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

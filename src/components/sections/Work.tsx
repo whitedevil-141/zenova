@@ -3,50 +3,9 @@ import { Link } from 'react-router-dom';
 import { Icon } from '@/components/icons/Icon';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { ProjectVisual } from './ProjectVisual';
+import { PROJECTS as ALL_PROJECTS } from '@/data/projects';
 
-interface Project {
-  id: string;
-  client: string;
-  category: string;
-  title: string;
-  tags: string[];
-  tone: string;
-}
-
-const PROJECTS: Project[] = [
-  {
-    id: 'p1',
-    client: 'Northwind Labs',
-    category: 'B2B SaaS',
-    title: 'Repositioning a developer platform around speed.',
-    tags: ['Brand', 'Web', 'Marketing'],
-    tone: '#3a5bff',
-  },
-  {
-    id: 'p2',
-    client: 'Aperture Health',
-    category: 'HealthTech',
-    title: 'A patient portal that actually gets used.',
-    tags: ['Product', 'UX'],
-    tone: '#6d4cff',
-  },
-  {
-    id: 'p3',
-    client: 'Stellar Capital',
-    category: 'Fintech',
-    title: 'From series A pitch to first-customer onboarding.',
-    tags: ['Startup', 'GTM'],
-    tone: '#a855f7',
-  },
-  {
-    id: 'p4',
-    client: 'Cobalt Studio',
-    category: 'Creative',
-    title: 'A content engine producing 4 long-form pieces / wk.',
-    tags: ['Content', 'SEO'],
-    tone: '#4f8cff',
-  },
-];
+const PROJECTS = ALL_PROJECTS.slice(0, 4);
 
 export function Work() {
   const [hovered, setHovered] = useState<string | null>(null);
@@ -61,11 +20,11 @@ export function Work() {
         />
 
         <div className="work-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-          {PROJECTS.map((p, i) => (
+          {PROJECTS.map((p) => (
             <Link
-              key={p.id}
-              to="/work"
-              onMouseEnter={() => setHovered(p.id)}
+              key={p.slug}
+              to={`/work/${p.slug}`}
+              onMouseEnter={() => setHovered(p.slug)}
               onMouseLeave={() => setHovered(null)}
               className="card work-card"
               style={{
@@ -92,7 +51,7 @@ export function Work() {
                   border: '1px solid var(--line)',
                 }}
               >
-                <ProjectVisual idx={i} tone={p.tone} animate={hovered === p.id} />
+                <ProjectVisual idx={p.visualIdx} tone={p.tone} animate={hovered === p.slug} />
                 <div
                   className="mono"
                   style={{
@@ -123,7 +82,7 @@ export function Work() {
                     justifyContent: 'center',
                     color: 'rgba(236, 236, 242, 0.62)',
                     border: '1px solid var(--line)',
-                    transform: hovered === p.id ? 'rotate(0)' : 'rotate(-45deg)',
+                    transform: hovered === p.slug ? 'rotate(0)' : 'rotate(-45deg)',
                     transition: 'transform .4s cubic-bezier(.2,.7,.2,1)',
                   }}
                 >

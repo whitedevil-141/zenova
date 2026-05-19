@@ -1,95 +1,12 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { PageHero } from '@/components/layout/PageHero';
 import { CTA } from '@/components/sections/CTA';
 import { ProjectVisual } from '@/components/sections/ProjectVisual';
 import { Icon } from '@/components/icons/Icon';
+import { PROJECTS } from '@/data/projects';
 
-interface CaseStudy {
-  id: string;
-  client: string;
-  category: string;
-  title: string;
-  summary: string;
-  tags: string[];
-  tone: string;
-  year: string;
-  metric: [string, string];
-}
-
-const ALL: CaseStudy[] = [
-  {
-    id: 'p1',
-    client: 'Northwind Labs',
-    category: 'B2B SaaS',
-    title: 'Repositioning a developer platform around speed.',
-    summary:
-      'New brand, new site, and a content engine that turned a tired DX story into the fastest path to a free-trial signup.',
-    tags: ['Brand', 'Web', 'Marketing'],
-    tone: '#3a5bff',
-    year: '2025',
-    metric: ['+212%', 'Trial signups, Q over Q'],
-  },
-  {
-    id: 'p2',
-    client: 'Aperture Health',
-    category: 'HealthTech',
-    title: 'A patient portal that actually gets used.',
-    summary:
-      'Rebuilt the booking, intake and records flow as one product. Replaced three vendors and shaved 38 minutes per appointment.',
-    tags: ['Product', 'UX'],
-    tone: '#6d4cff',
-    year: '2025',
-    metric: ['38 min', 'Saved per appointment'],
-  },
-  {
-    id: 'p3',
-    client: 'Stellar Capital',
-    category: 'Fintech',
-    title: 'From series A pitch to first-customer onboarding.',
-    summary:
-      'Eleven weeks: a working MVP, a closed seed round, and a sales motion the founders could run without us.',
-    tags: ['Startup', 'GTM'],
-    tone: '#a855f7',
-    year: '2024',
-    metric: ['$4.2M', 'Raised post-MVP'],
-  },
-  {
-    id: 'p4',
-    client: 'Cobalt Studio',
-    category: 'Creative',
-    title: 'A content engine producing 4 long-form pieces / wk.',
-    summary:
-      'Editorial calendar, briefs, in-house tools and SEO ops. Their writers ship; we sit alongside as the editor in chief.',
-    tags: ['Content', 'SEO'],
-    tone: '#4f8cff',
-    year: '2025',
-    metric: ['4× / wk', 'Long-form cadence'],
-  },
-  {
-    id: 'p5',
-    client: 'Mosaic',
-    category: 'Consumer',
-    title: 'Growth engine from zero to first ten thousand users.',
-    summary:
-      'Paid acquisition, lifecycle, and a landing page architecture tuned for the four messaging arcs that actually convert.',
-    tags: ['Marketing', 'Web'],
-    tone: '#7a55ff',
-    year: '2024',
-    metric: ['10k+', 'Activated users in 90 days'],
-  },
-  {
-    id: 'p6',
-    client: 'Verge',
-    category: 'Ops',
-    title: 'Replatformed billing without a single dropped invoice.',
-    summary:
-      'Migration of a tangled Stripe + custom-billing setup into one source of truth. Finance reclaimed two days every month.',
-    tags: ['Ops', 'Web'],
-    tone: '#5b6cff',
-    year: '2024',
-    metric: ['2 days', 'Reclaimed per month'],
-  },
-];
+const ALL = PROJECTS;
 
 const FILTERS = ['All', 'Brand', 'Web', 'Marketing', 'Product', 'Content', 'Ops'];
 
@@ -169,12 +86,11 @@ export function WorkPage() {
             className="work-grid"
             style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: 20 }}
           >
-            {filtered.map((p, i) => (
-              <a
-                key={p.id}
-                href="#"
-                onClick={(e) => e.preventDefault()}
-                onMouseEnter={() => setHovered(p.id)}
+            {filtered.map((p) => (
+              <Link
+                key={p.slug}
+                to={`/work/${p.slug}`}
+                onMouseEnter={() => setHovered(p.slug)}
                 onMouseLeave={() => setHovered(null)}
                 className="card work-card"
                 style={{
@@ -185,6 +101,8 @@ export function WorkPage() {
                   gap: 22,
                   position: 'relative',
                   overflow: 'hidden',
+                  textDecoration: 'none',
+                  color: 'var(--fg)',
                 }}
               >
                 <div
@@ -201,7 +119,7 @@ export function WorkPage() {
                     border: '1px solid var(--line)',
                   }}
                 >
-                  <ProjectVisual idx={i % 4} tone={p.tone} animate={hovered === p.id} />
+                  <ProjectVisual idx={p.visualIdx} tone={p.tone} animate={hovered === p.slug} />
                   <div
                     className="mono"
                     style={{
@@ -232,7 +150,7 @@ export function WorkPage() {
                       justifyContent: 'center',
                       color: 'rgba(236, 236, 242, 0.62)',
                       border: '1px solid var(--line)',
-                      transform: hovered === p.id ? 'rotate(0)' : 'rotate(-45deg)',
+                      transform: hovered === p.slug ? 'rotate(0)' : 'rotate(-45deg)',
                       transition: 'transform .4s cubic-bezier(.2,.7,.2,1)',
                       
                     }}
@@ -308,7 +226,7 @@ export function WorkPage() {
                     ))}
                   </div>
                 </div>
-              </a>
+              </Link>
             ))}
           </div>
 

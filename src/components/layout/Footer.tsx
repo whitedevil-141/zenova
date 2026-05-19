@@ -15,11 +15,11 @@ const COLS: FooterCol[] = [
   {
     title: 'Services',
     links: [
-      { label: 'Web Development', to: { pathname: '/services' } },
-      { label: 'Marketing', to: { pathname: '/services' } },
-      { label: 'Startup Support', to: { pathname: '/services' } },
-      { label: 'Business Mgmt', to: { pathname: '/services' } },
-      { label: 'Content', to: { pathname: '/services' } },
+      { label: 'Web Development', to: { pathname: '/services/web' } },
+      { label: 'Marketing', to: { pathname: '/services/marketing' } },
+      { label: 'Startup Support', to: { pathname: '/services/startup' } },
+      { label: 'Business Mgmt', to: { pathname: '/services/ops' } },
+      { label: 'Content', to: { pathname: '/services/content' } },
     ],
   },
   {

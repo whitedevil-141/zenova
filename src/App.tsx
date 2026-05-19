@@ -4,8 +4,10 @@ import { Nav } from '@/components/layout/Nav';
 import { Footer } from '@/components/layout/Footer';
 import { Home } from '@/pages/Home';
 import { ServicesPage } from '@/pages/ServicesPage';
+import { ServiceDetailPage } from '@/pages/ServiceDetailPage';
 import { ProcessPage } from '@/pages/ProcessPage';
 import { WorkPage } from '@/pages/WorkPage';
+import { ProjectDetailPage } from '@/pages/ProjectDetailPage';
 import { AboutPage } from '@/pages/AboutPage';
 import { TWEAK_DEFAULTS } from '@/config/tweaks';
 import { useTweaks } from '@/hooks/useTweaks';
@@ -85,8 +87,10 @@ function AnimatedRoutes({ rotateMs, showMarquee, showTestimonials }: AnimatedRou
           }
         />
         <Route path="/services" element={<ServicesPage />} />
+        <Route path="/services/:slug" element={<ServiceDetailPage />} />
         <Route path="/process" element={<ProcessPage />} />
         <Route path="/work" element={<WorkPage />} />
+        <Route path="/work/:slug" element={<ProjectDetailPage />} />
         <Route path="/about" element={<AboutPage />} />
       </Routes>
     </div>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Icon, type IconName, type IconComponent } from '@/components/icons/Icon';
 import { ServiceVisual, type ServiceVisualKind } from './ServiceVisual';
 
@@ -345,24 +346,55 @@ export function Services() {
                           </div>
                         ))}
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                        <div
-                          className="display svc-body__stat"
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 14,
+                          flexWrap: 'wrap',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                          <div
+                            className="display svc-body__stat"
+                            style={{
+                              fontSize: 36,
+                              fontWeight: 500,
+                              lineHeight: 1,
+                              background: `linear-gradient(90deg, ${s.hue}, var(--accent-3))`,
+                              WebkitBackgroundClip: 'text',
+                              backgroundClip: 'text',
+                              color: 'transparent',
+                            }}
+                          >
+                            {s.stat[0]}
+                          </div>
+                          <div style={{ fontSize: 12, color: 'var(--fg-faint)', lineHeight: 1.4, maxWidth: 160 }}>
+                            {s.stat[1]}
+                          </div>
+                        </div>
+                        <Link
+                          to={`/services/${s.id}`}
+                          className="mono"
                           style={{
-                            fontSize: 36,
-                            fontWeight: 500,
-                            lineHeight: 1,
-                            background: `linear-gradient(90deg, ${s.hue}, var(--accent-3))`,
-                            WebkitBackgroundClip: 'text',
-                            backgroundClip: 'text',
-                            color: 'transparent',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: 8,
+                            padding: '10px 16px',
+                            borderRadius: 999,
+                            border: `1px solid ${s.hue}55`,
+                            background: `${s.hue}15`,
+                            color: s.hue,
+                            fontSize: 11,
+                            letterSpacing: '0.1em',
+                            textDecoration: 'none',
+                            transition: 'all .25s',
                           }}
+                          onClick={(e) => e.stopPropagation()}
                         >
-                          {s.stat[0]}
-                        </div>
-                        <div style={{ fontSize: 12, color: 'var(--fg-faint)', lineHeight: 1.4, maxWidth: 160 }}>
-                          {s.stat[1]}
-                        </div>
+                          See full service <Icon.Arrow size={12} />
+                        </Link>
                       </div>
                     </div>
 
