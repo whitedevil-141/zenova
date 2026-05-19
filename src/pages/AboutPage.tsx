@@ -3,6 +3,7 @@ import { PageHero } from '@/components/layout/PageHero';
 import { CTA } from '@/components/sections/CTA';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Icon, type IconName, type IconComponent } from '@/components/icons/Icon';
+import { useTeam, useBrand } from '@/admin/store';
 
 interface Value {
   icon: IconName;
@@ -42,72 +43,6 @@ const VALUES: Value[] = [
   },
 ];
 
-interface Member {
-  name: string;
-  role: string;
-  bio: string;
-  initials: string;
-  tone: string;
-}
-
-const TEAM: Member[] = [
-  {
-    name: 'Mira Aldana',
-    role: 'Co-founder · Design & strategy',
-    bio: 'Previously design lead at Spectral and Linear. Runs the brand and product-design practice.',
-    initials: 'MA',
-    tone: '#3a5bff',
-  },
-  {
-    name: 'Tobias Reinhardt',
-    role: 'Co-founder · Engineering',
-    bio: 'Shipped infra at Stripe and platform at Vercel. Owns the build stack and engineering hires.',
-    initials: 'TR',
-    tone: '#6d4cff',
-  },
-  {
-    name: 'Suri Patel',
-    role: 'Head of growth',
-    bio: 'Ran paid + lifecycle at three Series-B startups before joining. Lives in the attribution dashboard.',
-    initials: 'SP',
-    tone: '#a855f7',
-  },
-  {
-    name: 'Jordan Wei',
-    role: 'Editorial lead',
-    bio: 'Long-form for The Verge and Stripe Press. Heads the content engine and brand voice work.',
-    initials: 'JW',
-    tone: '#7a55ff',
-  },
-  {
-    name: 'Noor Bashir',
-    role: 'Principal engineer',
-    bio: 'Built design systems at Notion and Vercel. Leads the build squad and on-call rotation.',
-    initials: 'NB',
-    tone: '#4f8cff',
-  },
-  {
-    name: 'Eitan Brody',
-    role: 'Brand director',
-    bio: 'Founder of two studios before Zenova. Logos, type and motion direction.',
-    initials: 'EB',
-    tone: '#5b6cff',
-  },
-  {
-    name: 'Yuki Sato',
-    role: 'Head of operations',
-    bio: 'Ex-COO at a Series B fintech. Owns the fractional-ops practice and our internal cadence.',
-    initials: 'YS',
-    tone: '#6d4cff',
-  },
-  {
-    name: 'Cassidy Lam',
-    role: 'Producer',
-    bio: 'Holds every engagement together. The voice on Friday demos, the calendar on Monday plans.',
-    initials: 'CL',
-    tone: '#9a4dff',
-  },
-];
 
 interface Manifesto {
   n: string;
@@ -163,17 +98,6 @@ const ROLES: Role[] = [
   { title: 'Editor', team: 'Content', location: 'Remote (US / EU)' },
 ];
 
-interface Location {
-  city: string;
-  tz: string;
-  detail: string;
-}
-
-const LOCATIONS: Location[] = [
-  { city: 'Brooklyn, NY', tz: 'UTC −4', detail: 'HQ · 12 people · founding studio' },
-  { city: 'Berlin', tz: 'UTC +2', detail: '6 people · EU client base, engineering core' },
-  { city: 'Remote', tz: '—', detail: 'Time zones permitting, hire anywhere' },
-];
 
 interface Milestone {
   year: string;
@@ -188,6 +112,10 @@ const TIMELINE: Milestone[] = [
 ];
 
 export function AboutPage() {
+  const [TEAM] = useTeam();
+  const [brand] = useBrand();
+  const LOCATIONS = brand.locations;
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, []);
@@ -658,7 +586,7 @@ export function AboutPage() {
                 ))}
               </div>
               <a
-                href="mailto:careers@zenova.studio"
+                href={`mailto:${brand.careersEmail}`}
                 className="mono"
                 style={{
                   display: 'inline-flex',
@@ -667,7 +595,7 @@ export function AboutPage() {
                   color: 'var(--accent-3)',
                 }}
               >
-                Or write to us: careers@zenova.studio <Icon.Arrow size={12} />
+                Or write to us: {brand.careersEmail} <Icon.Arrow size={12} />
               </a>
             </div>
           </div>

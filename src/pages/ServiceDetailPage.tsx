@@ -5,11 +5,13 @@ import { CTA } from '@/components/sections/CTA';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { ServiceVisual } from '@/components/sections/ServiceVisual';
 import { Icon, type IconComponent } from '@/components/icons/Icon';
-import { findService, SERVICES, type ServiceDetail } from '@/data/services';
+import { type ServiceDetail } from '@/data/services';
+import { useServices } from '@/admin/store';
 
 export function ServiceDetailPage() {
   const { slug = '' } = useParams();
-  const service = findService(slug);
+  const [SERVICES] = useServices();
+  const service = SERVICES.find((s) => s.slug === slug);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -529,6 +531,7 @@ export function ServiceDetailPage() {
 }
 
 function RelatedServices({ current }: { current: ServiceDetail }) {
+  const [SERVICES] = useServices();
   const items = SERVICES.filter((s) => current.related.includes(s.slug));
   if (!items.length) return null;
 

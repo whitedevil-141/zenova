@@ -1,4 +1,5 @@
 import { Icon } from '@/components/icons/Icon';
+import { useContent } from '@/admin/store';
 
 interface Testimonial {
   quote: string;
@@ -6,65 +7,6 @@ interface Testimonial {
   role: string;
   tone: string;
 }
-
-const ITEMS: Testimonial[] = [
-  {
-    quote:
-      'Zenova replaced three vendors for us. The brand, the site, the content pipeline — all one team, one Slack channel, one invoice.',
-    name: 'Maya Okafor',
-    role: 'COO, Northwind Labs',
-    tone: '#3a5bff',
-  },
-  {
-    quote:
-      "They shipped a working prototype in eleven days. That's the kind of momentum we hadn't felt since the founding team was three people.",
-    name: 'Daniel Reyes',
-    role: 'CEO, Stellar Capital',
-    tone: '#6d4cff',
-  },
-  {
-    quote:
-      'We came in for a website and walked out with a full GTM plan and the first $40k in pipeline. They actually care about the outcome.',
-    name: 'Priya Nair',
-    role: 'Head of Growth, Aperture Health',
-    tone: '#a855f7',
-  },
-  {
-    quote:
-      "The handoff was the cleanest I've ever seen. Our engineers picked up the codebase the next morning and shipped a feature by lunch.",
-    name: 'Jonas Weber',
-    role: 'CTO, Cobalt Studio',
-    tone: '#5b6cff',
-  },
-  {
-    quote:
-      'Two months in, traffic was up 4x and our CAC was down by a third. They run growth the way a product team runs sprints.',
-    name: 'Aisha Mensah',
-    role: 'Founder, Mosaic',
-    tone: '#7a55ff',
-  },
-  {
-    quote:
-      'Most agencies sell a deck. Zenova sold us a system — and then taught our team how to run it ourselves.',
-    name: 'Leo Castelli',
-    role: 'COO, Verge',
-    tone: '#9a4dff',
-  },
-  {
-    quote:
-      'They write better marketing copy than our last three writers combined, and the page actually converts. Wild.',
-    name: 'Sana Iqbal',
-    role: 'CMO, Halcyon',
-    tone: '#4f8cff',
-  },
-  {
-    quote:
-      'From pitch deck to seed close in eleven weeks. I have no idea how we would have done it without them embedded.',
-    name: 'Marcus Lin',
-    role: 'Founder, Lumen',
-    tone: '#8b5cf6',
-  },
-];
 
 function MarqueeRow({
   items,
@@ -187,8 +129,10 @@ function TestimonialCard({ t }: { t: Testimonial }) {
 }
 
 export function Testimonials() {
-  const row1 = ITEMS.slice(0, 4);
-  const row2 = ITEMS.slice(4);
+  const [content] = useContent();
+  const ITEMS = content.testimonials;
+  const row1 = ITEMS.slice(0, Math.ceil(ITEMS.length / 2));
+  const row2 = ITEMS.slice(Math.ceil(ITEMS.length / 2));
 
   return (
     <section

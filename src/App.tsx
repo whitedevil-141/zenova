@@ -9,6 +9,15 @@ import { ProcessPage } from '@/pages/ProcessPage';
 import { WorkPage } from '@/pages/WorkPage';
 import { ProjectDetailPage } from '@/pages/ProjectDetailPage';
 import { AboutPage } from '@/pages/AboutPage';
+import { AdminLogin, AuthGate } from '@/admin/pages/Login';
+import { Overview } from '@/admin/pages/Overview';
+import { ServicesAdmin } from '@/admin/pages/ServicesAdmin';
+import { ServiceEditor } from '@/admin/pages/ServiceEditor';
+import { ProjectsAdmin } from '@/admin/pages/ProjectsAdmin';
+import { ProjectEditor } from '@/admin/pages/ProjectEditor';
+import { TeamAdmin } from '@/admin/pages/TeamAdmin';
+import { ContentAdmin } from '@/admin/pages/ContentAdmin';
+import { Settings as AdminSettings } from '@/admin/pages/Settings';
 import { TWEAK_DEFAULTS } from '@/config/tweaks';
 import { useTweaks } from '@/hooks/useTweaks';
 import { applyPalette } from '@/lib/palette';
@@ -46,22 +55,65 @@ export function App() {
 
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
-      <Nav
-        theme={t.theme}
-        onToggleTheme={() => setTweak('theme', t.theme === 'dark' ? 'light' : 'dark')}
-      />
-      <AnimatedRoutes
-        rotateMs={t.rotateMs}
-        showMarquee={t.showMarquee}
-        showTestimonials={t.showTestimonials}
-      />
-      <Footer />
+      <Routes>
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route
+          path="/admin/*"
+          element={
+            <AuthGate>
+              <AdminRoutes />
+            </AuthGate>
+          }
+        />
+        <Route
+          path="/*"
+          element={
+            <PublicLayout
+              theme={t.theme}
+              rotateMs={t.rotateMs}
+              showMarquee={t.showMarquee}
+              showTestimonials={t.showTestimonials}
+              onToggleTheme={() =>
+                setTweak('theme', t.theme === 'dark' ? 'light' : 'dark')
+              }
+            />
+          }
+        />
+      </Routes>
       {ZenovaTweaks && (
         <Suspense fallback={null}>
           <ZenovaTweaks tweaks={t} setTweak={setTweak} />
         </Suspense>
       )}
     </BrowserRouter>
+  );
+}
+
+interface PublicLayoutProps {
+  theme: 'dark' | 'light';
+  rotateMs: number;
+  showMarquee: boolean;
+  showTestimonials: boolean;
+  onToggleTheme: () => void;
+}
+
+function PublicLayout({
+  theme,
+  rotateMs,
+  showMarquee,
+  showTestimonials,
+  onToggleTheme,
+}: PublicLayoutProps) {
+  return (
+    <>
+      <Nav theme={theme} onToggleTheme={onToggleTheme} />
+      <AnimatedRoutes
+        rotateMs={rotateMs}
+        showMarquee={showMarquee}
+        showTestimonials={showTestimonials}
+      />
+      <Footer />
+    </>
   );
 }
 
@@ -94,5 +146,20 @@ function AnimatedRoutes({ rotateMs, showMarquee, showTestimonials }: AnimatedRou
         <Route path="/about" element={<AboutPage />} />
       </Routes>
     </div>
+  );
+}
+
+function AdminRoutes() {
+  return (
+    <Routes>
+      <Route index element={<Overview />} />
+      <Route path="services" element={<ServicesAdmin />} />
+      <Route path="services/:slug" element={<ServiceEditor />} />
+      <Route path="projects" element={<ProjectsAdmin />} />
+      <Route path="projects/:slug" element={<ProjectEditor />} />
+      <Route path="team" element={<TeamAdmin />} />
+      <Route path="content" element={<ContentAdmin />} />
+      <Route path="settings" element={<AdminSettings />} />
+    </Routes>
   );
 }

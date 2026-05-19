@@ -1,17 +1,8 @@
-const CLIENTS = [
-  'NORTHWIND',
-  'Aperture',
-  'lumen',
-  'STELLAR',
-  'Cobalt',
-  'Verge',
-  'Halcyon',
-  'Prismic',
-  'KINETIC',
-  'Mosaic',
-];
+import { useContent } from '@/admin/store';
 
 export function Marquee() {
+  const [content] = useContent();
+  const CLIENTS = content.marquee.map((m) => m.label);
   const row = [...CLIENTS, ...CLIENTS];
   return (
     <section

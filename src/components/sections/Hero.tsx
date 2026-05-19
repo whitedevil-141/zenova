@@ -1,26 +1,15 @@
 import { Icon } from '@/components/icons/Icon';
 import { RotatingWords } from '@/components/ui/RotatingWords';
+import { useContent } from '@/admin/store';
 
 interface HeroProps {
   rotateMs: number;
 }
 
-const SERVICES = [
-  'Website Development',
-  'Marketing Solutions',
-  'Startup Support',
-  'Business Management',
-  'Content Writing',
-];
-
-const STATS: ReadonlyArray<readonly [string, string]> = [
-  ['20+', 'Projects shipped'],
-  ['8', 'Active clients'],
-  ['4.9', 'Client rating'],
-  ['2026', 'Building since'],
-];
-
 export function Hero({ rotateMs }: HeroProps) {
+  const [content] = useContent();
+  const SERVICES = content.hero.rotatingWords;
+  const STATS = content.hero.stats;
   return (
     <section
       id="top"
@@ -91,14 +80,14 @@ export function Hero({ rotateMs }: HeroProps) {
               animation: 'pulse-dot 2s ease-in-out infinite',
             }}
           />
-          Modern digital solutions, end-to-end.
+          {content.hero.badge}
         </div>
 
         <h1
           className="display hero-headline"
           style={{ margin: 0, animation: 'fade-up 1s cubic-bezier(.2,.7,.2,1) both' }}
         >
-          One agency for
+          {content.hero.headline}
         </h1>
         <div
           className="hero-rotating-row"
@@ -119,8 +108,7 @@ export function Hero({ rotateMs }: HeroProps) {
             animation: 'fade-up 1.1s cubic-bezier(.2,.7,.2,1) both .15s',
           }}
         >
-          Zenova combines design, development, marketing, and startup support into one seamless
-          partnership for ambitious modern businesses.
+          {content.hero.sub}
         </p>
 
         <div
@@ -135,13 +123,13 @@ export function Hero({ rotateMs }: HeroProps) {
           }}
         >
           <button className="btn-primary" onClick={() => (window.location.href = '#contact')}>
-            Start a project
+            {content.hero.primaryCta}
             <span style={{ display: 'inline-flex', animation: 'arrow-bounce 1.6s ease-in-out infinite' }}>
               <Icon.Arrow size={16} />
             </span>
           </button>
           <button className="btn-ghost" onClick={() => (window.location.href = '#services')}>
-            Explore services
+            {content.hero.secondaryCta}
             </button>
         </div>
 
@@ -161,13 +149,13 @@ export function Hero({ rotateMs }: HeroProps) {
             animation: 'fade-up 1.3s cubic-bezier(.2,.7,.2,1) both .45s',
           }}
         >
-          {STATS.map(([num, label]) => (
-            <div key={label} style={{ textAlign: 'center' }}>
+          {STATS.map((stat) => (
+            <div key={stat.id} style={{ textAlign: 'center' }}>
               <div className="display" style={{ fontSize: 'clamp(20px,2.2vw,28px)', fontWeight: 500 }}>
-                {num}
+                {stat.num}
               </div>
               <div className="mono" style={{ color: 'var(--fg-faint)', marginTop: 6 }}>
-                {label}
+                {stat.label}
               </div>
             </div>
           ))}

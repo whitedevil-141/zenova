@@ -1,6 +1,9 @@
 import { Icon } from '@/components/icons/Icon';
+import { useContent } from '@/admin/store';
 
 export function CTA() {
+  const [content] = useContent();
+  const cta = content.cta;
   return (
     <section id="contact" className="sec" style={{ paddingBottom: 80 }}>
       <div className="container">
@@ -43,12 +46,12 @@ export function CTA() {
           />
           <div style={{ position: 'relative' }}>
             <div className="mono" style={{ color: 'var(--fg-dim)', marginBottom: 20 }}>
-              ★ Now booking Q3 engagements
+              {cta.eyebrow}
             </div>
             <h2 className="display" style={{ fontSize: 'clamp(40px, 6vw, 80px)', margin: 0, fontWeight: 500 }}>
-              Let&apos;s build something
+              {cta.title}
               <br />
-              <span className="gradient-text">worth shipping.</span>
+              <span className="gradient-text">{cta.accentTitle}</span>
             </h2>
             <p
               style={{
@@ -61,13 +64,13 @@ export function CTA() {
                 lineHeight: 1.55,
               }}
             >
-              30-minute intro call. No deck, no sales pitch — just your goals and where we&apos;d start.
+              {cta.sub}
             </p>
             <div style={{ marginTop: 40, display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap' }}>
               <button className="btn-primary">
-                Book an intro call <Icon.Arrow size={16} />
+                {cta.primary} <Icon.Arrow size={16} />
               </button>
-              <button className="btn-ghost">hello@zenova.bd</button>
+              <button className="btn-ghost">{cta.secondary}</button>
             </div>
           </div>
         </div>

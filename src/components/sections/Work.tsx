@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import { Icon } from '@/components/icons/Icon';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { ProjectVisual } from './ProjectVisual';
-import { PROJECTS as ALL_PROJECTS } from '@/data/projects';
-
-const PROJECTS = ALL_PROJECTS.slice(0, 4);
+import { useProjects } from '@/admin/store';
 
 export function Work() {
+  const [allProjects] = useProjects();
+  const PROJECTS = allProjects.slice(0, 4);
   const [hovered, setHovered] = useState<string | null>(null);
 
   return (

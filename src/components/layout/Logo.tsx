@@ -9,7 +9,7 @@ export function Logo({ size }: LogoProps) {
   const style: CSSProperties = size != null ? { fontSize: size } : {};
   return (
     <span className="zlogo" style={style}>
-      <img src="./assets/zenova-mark.png" alt="Z" className="zlogo-mark" />
+      <img src="/assets/zenova-mark.png" alt="Z" className="zlogo-mark" />
       <span className="zlogo-word">enova</span>
     </span>
   );
@@ -20,7 +20,7 @@ export function LogoMark({ size }: LogoProps) {
   const style: CSSProperties = size != null ? { fontSize: size } : {};
   return (
     <span style={{ display: 'inline-flex', ...style }}>
-      <img src="./assets/zenova-mark.png" alt="Zenova" className="zlogo-mark-only" />
+      <img src="/assets/zenova-mark.png" alt="Zenova" className="zlogo-mark-only" />
     </span>
   );
 }

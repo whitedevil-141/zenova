@@ -2,38 +2,12 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@/components/icons/Icon';
 import { SectionHeader } from '@/components/ui/SectionHeader';
+import { useContent } from '@/admin/store';
 
 interface QA {
   q: string;
   a: string;
 }
-
-const FAQS: QA[] = [
-  {
-    q: 'How is Zenova different from a traditional agency?',
-    a: "We're one accountable team across design, build and growth — not a handoff between vendors. Same Slack channel, same Figma, same engineers from kickoff to month twelve.",
-  },
-  {
-    q: 'What does a typical engagement look like?',
-    a: 'Most clients start with a 6–10 week build (Discover → Design → Build) and continue into a monthly Grow retainer. Quarter-long minimums; month-to-month after that.',
-  },
-  {
-    q: 'Do we own the code and design files?',
-    a: 'Always. Repos sit in your GitHub from day one and Figma files transfer at handoff. Nothing about your stack is hostage to us continuing the engagement.',
-  },
-  {
-    q: 'How do you price projects?',
-    a: 'Fixed-fee per phase for the build, then a flat monthly retainer for ongoing growth work. We send a single invoice with everything broken out — no per-hour surprises.',
-  },
-  {
-    q: 'Can you work with our existing team or codebase?',
-    a: 'Yes — about a third of our engagements augment an in-house team. We adapt to your conventions, sit in your standups, and write code your engineers can read on day one.',
-  },
-  {
-    q: 'How quickly can we start?',
-    a: 'Discovery usually kicks off 1–2 weeks after the intro call. We hold one onboarding slot per month so we never overload an engagement.',
-  },
-];
 
 function FAQItem({ item, isOpen, onToggle }: { item: QA; isOpen: boolean; onToggle: () => void }) {
   return (
@@ -117,6 +91,8 @@ function FAQItem({ item, isOpen, onToggle }: { item: QA; isOpen: boolean; onTogg
 }
 
 export function FAQ() {
+  const [content] = useContent();
+  const FAQS = content.faqs;
   const [openIdx, setOpenIdx] = useState<number | null>(0);
 
   return (

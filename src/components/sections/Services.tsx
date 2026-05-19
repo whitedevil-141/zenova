@@ -1,111 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Icon, type IconName, type IconComponent } from '@/components/icons/Icon';
-import { ServiceVisual, type ServiceVisualKind } from './ServiceVisual';
-
-interface Service {
-  id: string;
-  n: string;
-  icon: IconName;
-  tag: string;
-  title: string;
-  lede: string;
-  bullets: string[];
-  stat: [string, string];
-  hue: string;
-  visual: ServiceVisualKind;
-}
-
-const SERVICES: Service[] = [
-  {
-    id: 'web',
-    n: '',
-    icon: 'Code',
-    tag: 'Build',
-    title: 'Website Development',
-    lede: 'High-performance sites and web apps engineered for speed, accessibility and revenue.',
-    bullets: [
-      'Next.js & TypeScript engineering',
-      'Headless CMS integration',
-      'Core Web Vitals tuning',
-      'Analytics & A/B testing',
-    ],
-    stat: ['<1.2s', 'Median LCP across recent ships'],
-    hue: '#3a5bff',
-    visual: 'browser',
-  },
-  {
-    id: 'marketing',
-    n: '',
-    icon: 'Spark',
-    tag: 'Grow',
-    title: 'Marketing Solutions',
-    lede: 'Demand generation, SEO, paid media and lifecycle programs tied to actual revenue lines.',
-    bullets: [
-      'Performance SEO programs',
-      'Paid media (Meta, LinkedIn, Google)',
-      'Email & lifecycle automation',
-      'Attribution & MMM dashboards',
-    ],
-    stat: ['3.4×', 'Average pipeline lift in 90 days'],
-    hue: '#5b6cff',
-    visual: 'curve',
-  },
-  {
-    id: 'startup',
-    n: '',
-    icon: 'Rocket',
-    tag: 'Launch',
-    title: 'Startup Support',
-    lede: 'From pitch deck to MVP to first hundred customers — a partner that ships, not just advises.',
-    bullets: [
-      'Pitch & investor narrative',
-      'MVP scoping & build',
-      'Brand & positioning sprint',
-      'Go-to-market runway',
-    ],
-    stat: ['11 days', 'Fastest funded MVP we shipped'],
-    hue: '#7a55ff',
-    visual: 'rocket',
-  },
-  {
-    id: 'ops',
-    n: '',
-    icon: 'Layers',
-    tag: 'Operate',
-    title: 'Business Management',
-    lede: 'Fractional ops, finance and tooling that turn a busy team into a high-leverage one.',
-    bullets: [
-      'Process design & SOPs',
-      'CRM & tooling stack',
-      'Hiring & onboarding playbooks',
-      'Weekly reporting cadence',
-    ],
-    stat: ['38%', 'Average hours reclaimed monthly'],
-    hue: '#9a4dff',
-    visual: 'kanban',
-  },
-  {
-    id: 'content',
-    n: '',
-    icon: 'Pen',
-    tag: 'Voice',
-    title: 'Content Writing',
-    lede: 'Editorial, longform and brand copy that reads like a human and ranks like a machine.',
-    bullets: [
-      'Brand voice & messaging',
-      'SEO articles & guides',
-      'Sales & landing copy',
-      'Newsletter strategy',
-    ],
-    stat: ['+212%', 'Organic traffic lift, 6-month avg'],
-    hue: '#a855f7',
-    visual: 'editor',
-  },
-];
+import { Icon, type IconComponent } from '@/components/icons/Icon';
+import { ServiceVisual } from './ServiceVisual';
+import { useServices } from '@/admin/store';
 
 export function Services() {
-  const [open, setOpen] = useState<string>('web');
+  const [SERVICES] = useServices();
+  const [open, setOpen] = useState<string>(SERVICES[0]?.slug ?? '');
 
   return (
     <section id="services" className="sec" style={{ position: 'relative' }}>
@@ -164,13 +65,13 @@ export function Services() {
           }}
         >
           {SERVICES.map((s, i) => {
-            const isOpen = open === s.id;
+            const isOpen = open === s.slug;
             const IconC = Icon[s.icon] as IconComponent;
             return (
               <div
-                key={s.id}
-                onMouseEnter={() => setOpen(s.id)}
-                onClick={() => setOpen(s.id)}
+                key={s.slug}
+                onMouseEnter={() => setOpen(s.slug)}
+                onClick={() => setOpen(s.slug)}
                 className="svc-row"
                 style={{
                   position: 'relative',
@@ -214,7 +115,7 @@ export function Services() {
                       transition: 'color .3s',
                     }}
                   >
-                    {s.n}
+                    {String(i + 1).padStart(2, '0')}
                   </div>
 
                   <div
@@ -375,7 +276,7 @@ export function Services() {
                           </div>
                         </div>
                         <Link
-                          to={`/services/${s.id}`}
+                          to={`/services/${s.slug}`}
                           className="mono"
                           style={{
                             display: 'inline-flex',

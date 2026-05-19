@@ -5,11 +5,13 @@ import { CTA } from '@/components/sections/CTA';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { ProjectVisual } from '@/components/sections/ProjectVisual';
 import { Icon } from '@/components/icons/Icon';
-import { findProject, PROJECTS, type ProjectDetail } from '@/data/projects';
+import { type ProjectDetail } from '@/data/projects';
+import { useProjects } from '@/admin/store';
 
 export function ProjectDetailPage() {
   const { slug = '' } = useParams();
-  const project = findProject(slug);
+  const [PROJECTS] = useProjects();
+  const project = PROJECTS.find((p) => p.slug === slug);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });

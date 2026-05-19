@@ -4,13 +4,12 @@ import { PageHero } from '@/components/layout/PageHero';
 import { CTA } from '@/components/sections/CTA';
 import { ProjectVisual } from '@/components/sections/ProjectVisual';
 import { Icon } from '@/components/icons/Icon';
-import { PROJECTS } from '@/data/projects';
-
-const ALL = PROJECTS;
+import { useProjects } from '@/admin/store';
 
 const FILTERS = ['All', 'Brand', 'Web', 'Marketing', 'Product', 'Content', 'Ops'];
 
 export function WorkPage() {
+  const [ALL] = useProjects();
   const [filter, setFilter] = useState('All');
   const [hovered, setHovered] = useState<string | null>(null);
 
