@@ -26,6 +26,13 @@
         var basePath = '/' + segments.slice(0, keep).join('/');
         if (basePath !== '/') basePath += '/';
 
+        // Ensure favicon resolves from the project base even on deep 404 paths.
+        var icon = document.createElement('link');
+        icon.rel = 'icon';
+        icon.type = 'image/png';
+        icon.href = basePath + 'assets/favicon.png';
+        document.head.appendChild(icon);
+
         var rest = segments.slice(keep).join('/').replace(/&/g, '~and~');
         var search = l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '';
 
