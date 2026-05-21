@@ -13,9 +13,7 @@ from sqlalchemy.ext.asyncio import (
 )
 
 from app.config import get_settings
-import os
-print("DATABASE_URL =", os.getenv("DATABASE_URL"))
-print("DATABASE_URL_SYNC =", os.getenv("DATABASE_URL_SYNC"))
+
 _engine: AsyncEngine | None = None
 _sessionmaker: async_sessionmaker[AsyncSession] | None = None
 

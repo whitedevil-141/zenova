@@ -52,8 +52,10 @@ async def login(
     db: DbSession,
 ) -> LoginResponse:
     """Exchange email + password for an access/refresh token pair."""
+    print("LOGIN REQUEST")
     stmt = select(AdminUser).where(AdminUser.email == payload.email.lower())
     user = (await db.execute(stmt)).scalar_one_or_none()
+    print("HASH =", user.password_hash if user else None)
     if user is None or not verify_password(payload.password, user.password_hash):
         logger.info(
             "login_failed",
