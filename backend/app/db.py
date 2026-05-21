@@ -28,7 +28,7 @@ def get_engine() -> AsyncEngine:
             max_overflow=settings.db_max_overflow,
             pool_recycle=settings.db_pool_recycle_seconds,
             pool_pre_ping=True,
-            future=True,
+            connect_args={"ssl": "require"},
         )
         _sessionmaker = async_sessionmaker(
             _engine, class_=AsyncSession, expire_on_commit=False, autoflush=False
