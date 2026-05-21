@@ -238,7 +238,7 @@ export function AdminShell({
 
   const handleLogout = () => {
     logout();
-    window.location.href = '/admin/login';
+    window.location.href = '/zenova/admin/login';
   };
 
   return (
