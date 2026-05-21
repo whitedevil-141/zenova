@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@/components/icons/Icon';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { ProjectVisual } from './ProjectVisual';
+import { ProjectPreview } from './ProjectPreview';
 import { useProjects } from '@/admin/store';
 
 export function Work() {
@@ -51,7 +51,12 @@ export function Work() {
                   border: '1px solid var(--line)',
                 }}
               >
-                <ProjectVisual idx={p.visualIdx} tone={p.tone} animate={hovered === p.slug} />
+                <ProjectPreview
+                  images={p.images}
+                  visualIdx={p.visualIdx}
+                  tone={p.tone}
+                  animate={hovered === p.slug}
+                />
                 <div
                   className="mono"
                   style={{

@@ -14,6 +14,12 @@ export interface ProjectTestimonial {
   role: string;
 }
 
+export interface ProjectImage {
+  src: string;
+  alt?: string;
+  caption?: string;
+}
+
 export interface ProjectDetail {
   slug: string;
   client: string;
@@ -35,6 +41,7 @@ export interface ProjectDetail {
   stack: string[];
   testimonial: ProjectTestimonial;
   visualIdx: number;
+  images?: ProjectImage[];
 }
 
 export const PROJECTS: ProjectDetail[] = [
@@ -81,6 +88,7 @@ export const PROJECTS: ProjectDetail[] = [
       role: 'CEO, Northwind Labs',
     },
     visualIdx: 0,
+    images: [],
   },
   {
     slug: 'aperture-health',
@@ -125,6 +133,7 @@ export const PROJECTS: ProjectDetail[] = [
       role: 'COO, Aperture Health',
     },
     visualIdx: 1,
+    images: [],
   },
   {
     slug: 'stellar-capital',
@@ -169,6 +178,7 @@ export const PROJECTS: ProjectDetail[] = [
       role: 'Co-founder, Stellar Capital',
     },
     visualIdx: 2,
+    images: [],
   },
   {
     slug: 'cobalt-studio',
@@ -213,6 +223,7 @@ export const PROJECTS: ProjectDetail[] = [
       role: 'Founder, Cobalt Studio',
     },
     visualIdx: 3,
+    images: [],
   },
   {
     slug: 'mosaic',
@@ -257,6 +268,7 @@ export const PROJECTS: ProjectDetail[] = [
       role: 'CEO, Mosaic',
     },
     visualIdx: 0,
+    images: [],
   },
   {
     slug: 'verge',
@@ -301,6 +313,7 @@ export const PROJECTS: ProjectDetail[] = [
       role: 'CFO, Verge',
     },
     visualIdx: 1,
+    images: [],
   },
 ];
 

@@ -10,7 +10,7 @@ import {
   Toast,
   Field,
 } from '@/admin/components/Form';
-import { servicesStore, useServices } from '@/admin/store';
+import { patchService, servicesStore, useServices } from '@/admin/store';
 import type {
   ServiceDetail,
   ServicePackage,
@@ -53,20 +53,28 @@ export function ServiceEditor() {
     setDraft((d) => (d ? { ...d, [key]: value } : d));
   };
 
-  const save = () => {
+  const save = async () => {
     if (!draft) return;
     if (isNew) {
       if (services.some((s) => s.slug === draft.slug)) {
         setToast(`Slug "${draft.slug}" already exists — pick another.`);
         return;
       }
-      servicesStore.set([...services, draft]);
-      setToast('Service created');
-      nav(`/admin/services/${draft.slug}`, { replace: true });
+      try {
+        await servicesStore.set([...services, draft]);
+        setToast('Service created');
+        nav(`/admin/services/${draft.slug}`, { replace: true });
+      } catch (err) {
+        setToast(err instanceof Error ? err.message : 'Save failed.');
+      }
     } else {
-      servicesStore.set(services.map((s) => (s.slug === slug ? draft : s)));
-      setToast('Saved');
-      if (draft.slug !== slug) nav(`/admin/services/${draft.slug}`, { replace: true });
+      try {
+        await patchService(slug, draft);
+        setToast('Saved');
+        if (draft.slug !== slug) nav(`/admin/services/${draft.slug}`, { replace: true });
+      } catch (err) {
+        setToast(err instanceof Error ? err.message : 'Save failed.');
+      }
     }
   };
 

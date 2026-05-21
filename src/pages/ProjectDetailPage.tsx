@@ -3,7 +3,7 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import { PageHero } from '@/components/layout/PageHero';
 import { CTA } from '@/components/sections/CTA';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { ProjectVisual } from '@/components/sections/ProjectVisual';
+import { ProjectPreview } from '@/components/sections/ProjectPreview';
 import { Icon } from '@/components/icons/Icon';
 import { type ProjectDetail } from '@/data/projects';
 import { useProjects } from '@/admin/store';
@@ -66,7 +66,12 @@ export function ProjectDetailPage() {
               `,
             }}
           >
-            <ProjectVisual idx={project.visualIdx} tone={project.tone} animate />
+            <ProjectPreview
+              images={project.images}
+              visualIdx={project.visualIdx}
+              tone={project.tone}
+              animate
+            />
             <div
               style={{
                 position: 'absolute',
@@ -114,6 +119,56 @@ export function ProjectDetailPage() {
           </div>
         </div>
       </section>
+
+      {(project.images?.length ?? 0) > 1 && (
+        <section className="sec" style={{ paddingTop: 56 }}>
+          <div
+            className="container"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: 16,
+            }}
+          >
+            {project.images!.slice(1).map((img, i) => (
+              <figure
+                key={i}
+                style={{
+                  margin: 0,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 8,
+                }}
+              >
+                <div
+                  style={{
+                    aspectRatio: '4 / 3',
+                    borderRadius: 18,
+                    overflow: 'hidden',
+                    border: '1px solid var(--line)',
+                    background: '#0a0b13',
+                  }}
+                >
+                  <img
+                    src={img.src}
+                    alt={img.alt ?? ''}
+                    loading="lazy"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
+                </div>
+                {img.caption && (
+                  <figcaption
+                    className="mono"
+                    style={{ color: 'var(--fg-faint)', fontSize: 12 }}
+                  >
+                    {img.caption}
+                  </figcaption>
+                )}
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="sec" style={{ paddingTop: 56 }}>
         <div
@@ -428,7 +483,12 @@ function NextProjectCard({ project }: { project: ProjectDetail }) {
           border: '1px solid var(--line)',
         }}
       >
-        <ProjectVisual idx={project.visualIdx} tone={project.tone} animate />
+        <ProjectPreview
+          images={project.images}
+          visualIdx={project.visualIdx}
+          tone={project.tone}
+          animate
+        />
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 14 }}>
         <div className="mono" style={{ color: 'var(--fg-faint)' }}>

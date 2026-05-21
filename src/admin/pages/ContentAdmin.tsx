@@ -8,7 +8,7 @@ import {
   TextField,
   Toast,
 } from '@/admin/components/Form';
-import { contentStore, useContent, type SiteContent } from '@/admin/store';
+import { contentStore, patchContent, useContent, type SiteContent } from '@/admin/store';
 
 type Tab = 'hero' | 'cta' | 'faq' | 'testimonials' | 'marquee';
 
@@ -21,8 +21,18 @@ export function ContentAdmin() {
   const [tab, setTab] = useState<Tab>('hero');
   const [toast, setToast] = useState<string | null>(null);
 
-  const patch = (updater: (prev: SiteContent) => SiteContent) => {
-    contentStore.set(updater);
+  const showError = (err: unknown) =>
+    setToast(err instanceof Error ? err.message : 'Save failed.');
+
+  // Each helper sends only the changed top-level key over the wire.
+  const update = (delta: Partial<SiteContent>) => {
+    patchContent(delta).catch(showError);
+  };
+  const updateHero = (delta: Partial<SiteContent['hero']>) => {
+    update({ hero: { ...content.hero, ...delta } });
+  };
+  const updateCta = (delta: Partial<SiteContent['cta']>) => {
+    update({ cta: { ...content.cta, ...delta } });
   };
 
   const tabs: Array<{ id: Tab; label: string }> = [
@@ -42,7 +52,9 @@ export function ContentAdmin() {
         <button
           className="adm-btn"
           onClick={() => {
-            if (window.confirm('Reset site content to defaults?')) contentStore.reset();
+            if (window.confirm('Reset site content to defaults?')) {
+              contentStore.reset().catch(showError);
+            }
           }}
         >
           Reset
@@ -66,35 +78,35 @@ export function ContentAdmin() {
           <TextField
             label="Status pill text"
             value={content.hero.badge}
-            onChange={(v) => patch((p) => ({ ...p, hero: { ...p.hero, badge: v } }))}
+            onChange={(v) => updateHero({ badge: v })}
           />
           <TextField
             label="Headline"
             value={content.hero.headline}
-            onChange={(v) => patch((p) => ({ ...p, hero: { ...p.hero, headline: v } }))}
+            onChange={(v) => updateHero({ headline: v })}
           />
           <StringList
             label="Rotating words"
             hint="Cycle through these next to the headline."
             values={content.hero.rotatingWords}
-            onChange={(v) => patch((p) => ({ ...p, hero: { ...p.hero, rotatingWords: v } }))}
+            onChange={(v) => updateHero({ rotatingWords: v })}
           />
           <TextArea
             label="Sub-copy"
             value={content.hero.sub}
-            onChange={(v) => patch((p) => ({ ...p, hero: { ...p.hero, sub: v } }))}
+            onChange={(v) => updateHero({ sub: v })}
             rows={3}
           />
           <div className="adm-row adm-row--2">
             <TextField
               label="Primary CTA label"
               value={content.hero.primaryCta}
-              onChange={(v) => patch((p) => ({ ...p, hero: { ...p.hero, primaryCta: v } }))}
+              onChange={(v) => updateHero({ primaryCta: v })}
             />
             <TextField
               label="Secondary CTA label"
               value={content.hero.secondaryCta}
-              onChange={(v) => patch((p) => ({ ...p, hero: { ...p.hero, secondaryCta: v } }))}
+              onChange={(v) => updateHero({ secondaryCta: v })}
             />
           </div>
           <Field label="Stat tiles (number + label)">
@@ -105,33 +117,30 @@ export function ContentAdmin() {
                     className="adm-input"
                     value={s.num}
                     placeholder="20+"
-                    onChange={(e) =>
-                      patch((p) => {
-                        const stats = [...p.hero.stats];
-                        stats[i] = { ...stats[i], num: e.target.value };
-                        return { ...p, hero: { ...p.hero, stats } };
-                      })
-                    }
+                    onChange={(e) => {
+                      const stats = content.hero.stats.map((x, idx) =>
+                        idx === i ? { ...x, num: e.target.value } : x,
+                      );
+                      updateHero({ stats });
+                    }}
                   />
                   <input
                     className="adm-input"
                     value={s.label}
                     placeholder="Projects shipped"
-                    onChange={(e) =>
-                      patch((p) => {
-                        const stats = [...p.hero.stats];
-                        stats[i] = { ...stats[i], label: e.target.value };
-                        return { ...p, hero: { ...p.hero, stats } };
-                      })
-                    }
+                    onChange={(e) => {
+                      const stats = content.hero.stats.map((x, idx) =>
+                        idx === i ? { ...x, label: e.target.value } : x,
+                      );
+                      updateHero({ stats });
+                    }}
                   />
                   <button
                     className="adm-btn adm-btn--sm adm-btn--danger"
                     onClick={() =>
-                      patch((p) => ({
-                        ...p,
-                        hero: { ...p.hero, stats: p.hero.stats.filter((_, idx) => idx !== i) },
-                      }))
+                      updateHero({
+                        stats: content.hero.stats.filter((_, idx) => idx !== i),
+                      })
                     }
                   >
                     ✕
@@ -141,10 +150,9 @@ export function ContentAdmin() {
               <button
                 className="adm-btn adm-btn--sm"
                 onClick={() =>
-                  patch((p) => ({
-                    ...p,
-                    hero: { ...p.hero, stats: [...p.hero.stats, { id: uid('s'), num: '', label: '' }] },
-                  }))
+                  updateHero({
+                    stats: [...content.hero.stats, { id: uid('s'), num: '', label: '' }],
+                  })
                 }
                 style={{ alignSelf: 'flex-start' }}
               >
@@ -160,36 +168,36 @@ export function ContentAdmin() {
           <TextField
             label="Eyebrow"
             value={content.cta.eyebrow}
-            onChange={(v) => patch((p) => ({ ...p, cta: { ...p.cta, eyebrow: v } }))}
+            onChange={(v) => updateCta({ eyebrow: v })}
           />
           <div className="adm-row adm-row--2">
             <TextField
               label="Title"
               value={content.cta.title}
-              onChange={(v) => patch((p) => ({ ...p, cta: { ...p.cta, title: v } }))}
+              onChange={(v) => updateCta({ title: v })}
             />
             <TextField
               label="Accent (gradient) title"
               value={content.cta.accentTitle}
-              onChange={(v) => patch((p) => ({ ...p, cta: { ...p.cta, accentTitle: v } }))}
+              onChange={(v) => updateCta({ accentTitle: v })}
             />
           </div>
           <TextArea
             label="Sub-copy"
             value={content.cta.sub}
-            onChange={(v) => patch((p) => ({ ...p, cta: { ...p.cta, sub: v } }))}
+            onChange={(v) => updateCta({ sub: v })}
             rows={3}
           />
           <div className="adm-row adm-row--2">
             <TextField
               label="Primary button"
               value={content.cta.primary}
-              onChange={(v) => patch((p) => ({ ...p, cta: { ...p.cta, primary: v } }))}
+              onChange={(v) => updateCta({ primary: v })}
             />
             <TextField
               label="Secondary button"
               value={content.cta.secondary}
-              onChange={(v) => patch((p) => ({ ...p, cta: { ...p.cta, secondary: v } }))}
+              onChange={(v) => updateCta({ secondary: v })}
             />
           </div>
         </div>
@@ -208,7 +216,7 @@ export function ContentAdmin() {
                 <button
                   className="adm-btn adm-btn--sm adm-btn--danger"
                   onClick={() =>
-                    patch((p) => ({ ...p, faqs: p.faqs.filter((_, idx) => idx !== i) }))
+                    update({ faqs: content.faqs.filter((_, idx) => idx !== i) })
                   }
                 >
                   Remove
@@ -217,25 +225,23 @@ export function ContentAdmin() {
               <TextField
                 label="Question"
                 value={f.q}
-                onChange={(v) =>
-                  patch((p) => {
-                    const faqs = [...p.faqs];
-                    faqs[i] = { ...faqs[i], q: v };
-                    return { ...p, faqs };
-                  })
-                }
+                onChange={(v) => {
+                  const faqs = content.faqs.map((x, idx) =>
+                    idx === i ? { ...x, q: v } : x,
+                  );
+                  update({ faqs });
+                }}
               />
               <TextArea
                 label="Answer"
                 value={f.a}
                 rows={3}
-                onChange={(v) =>
-                  patch((p) => {
-                    const faqs = [...p.faqs];
-                    faqs[i] = { ...faqs[i], a: v };
-                    return { ...p, faqs };
-                  })
-                }
+                onChange={(v) => {
+                  const faqs = content.faqs.map((x, idx) =>
+                    idx === i ? { ...x, a: v } : x,
+                  );
+                  update({ faqs });
+                }}
               />
             </div>
           ))}
@@ -243,7 +249,7 @@ export function ContentAdmin() {
             className="adm-btn"
             style={{ alignSelf: 'flex-start' }}
             onClick={() =>
-              patch((p) => ({ ...p, faqs: [...p.faqs, { id: uid('f'), q: '', a: '' }] }))
+              update({ faqs: [...content.faqs, { id: uid('f'), q: '', a: '' }] })
             }
           >
             + Add FAQ
@@ -264,10 +270,9 @@ export function ContentAdmin() {
                 <button
                   className="adm-btn adm-btn--sm adm-btn--danger"
                   onClick={() =>
-                    patch((p) => ({
-                      ...p,
-                      testimonials: p.testimonials.filter((_, idx) => idx !== i),
-                    }))
+                    update({
+                      testimonials: content.testimonials.filter((_, idx) => idx !== i),
+                    })
                   }
                 >
                   ✕
@@ -277,48 +282,44 @@ export function ContentAdmin() {
                 label="Quote"
                 value={t.quote}
                 rows={4}
-                onChange={(v) =>
-                  patch((p) => {
-                    const arr = [...p.testimonials];
-                    arr[i] = { ...arr[i], quote: v };
-                    return { ...p, testimonials: arr };
-                  })
-                }
+                onChange={(v) => {
+                  const testimonials = content.testimonials.map((x, idx) =>
+                    idx === i ? { ...x, quote: v } : x,
+                  );
+                  update({ testimonials });
+                }}
               />
               <div className="adm-row adm-row--2">
                 <TextField
                   label="Name"
                   value={t.name}
-                  onChange={(v) =>
-                    patch((p) => {
-                      const arr = [...p.testimonials];
-                      arr[i] = { ...arr[i], name: v };
-                      return { ...p, testimonials: arr };
-                    })
-                  }
+                  onChange={(v) => {
+                    const testimonials = content.testimonials.map((x, idx) =>
+                      idx === i ? { ...x, name: v } : x,
+                    );
+                    update({ testimonials });
+                  }}
                 />
                 <TextField
                   label="Role"
                   value={t.role}
-                  onChange={(v) =>
-                    patch((p) => {
-                      const arr = [...p.testimonials];
-                      arr[i] = { ...arr[i], role: v };
-                      return { ...p, testimonials: arr };
-                    })
-                  }
+                  onChange={(v) => {
+                    const testimonials = content.testimonials.map((x, idx) =>
+                      idx === i ? { ...x, role: v } : x,
+                    );
+                    update({ testimonials });
+                  }}
                 />
               </div>
               <ColorField
                 label="Tone"
                 value={t.tone}
-                onChange={(v) =>
-                  patch((p) => {
-                    const arr = [...p.testimonials];
-                    arr[i] = { ...arr[i], tone: v };
-                    return { ...p, testimonials: arr };
-                  })
-                }
+                onChange={(v) => {
+                  const testimonials = content.testimonials.map((x, idx) =>
+                    idx === i ? { ...x, tone: v } : x,
+                  );
+                  update({ testimonials });
+                }}
               />
             </div>
           ))}
@@ -326,13 +327,12 @@ export function ContentAdmin() {
             className="adm-btn"
             style={{ alignSelf: 'flex-start' }}
             onClick={() =>
-              patch((p) => ({
-                ...p,
+              update({
                 testimonials: [
-                  ...p.testimonials,
+                  ...content.testimonials,
                   { id: uid('q'), quote: '', name: '', role: '', tone: '#6d4cff' },
                 ],
-              }))
+              })
             }
           >
             + Add testimonial
@@ -350,13 +350,12 @@ export function ContentAdmin() {
             label=""
             values={content.marquee.map((m) => m.label)}
             onChange={(values) =>
-              patch((p) => ({
-                ...p,
+              update({
                 marquee: values.map((label, idx) => ({
-                  id: p.marquee[idx]?.id ?? uid('m'),
+                  id: content.marquee[idx]?.id ?? uid('m'),
                   label,
                 })),
-              }))
+              })
             }
             placeholder="e.g. NORTHWIND"
           />

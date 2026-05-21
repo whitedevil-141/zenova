@@ -29,6 +29,7 @@ export function emptyProject(): ProjectDetail {
       role: '',
     },
     visualIdx: 0,
+    images: [],
   };
 }
 
@@ -88,29 +89,37 @@ export function ProjectsAdmin() {
             className="adm-list__row"
             style={{ gridTemplateColumns: '40px 1.6fr 1fr 0.5fr 0.7fr 220px' }}
           >
-            <span
-              className="adm-badge__dot"
-              style={{ background: p.tone, boxShadow: `0 0 8px ${p.tone}` }}
-            />
-            <div>
+            <div className="adm-list__cell adm-list__cell--lead">
+              <span
+                className="adm-badge__dot"
+                style={{ background: p.tone, boxShadow: `0 0 8px ${p.tone}` }}
+              />
+            </div>
+            <div className="adm-list__cell adm-list__cell--primary">
               <div style={{ fontSize: 14, fontWeight: 500 }}>{p.client}</div>
               <div style={{ fontSize: 12, color: 'var(--fg-faint)' }}>{p.title}</div>
             </div>
-            <div style={{ color: 'var(--fg-dim)', fontSize: 13 }}>{p.category}</div>
-            <div style={{ color: 'var(--fg-dim)', fontSize: 13 }}>{p.year}</div>
-            <div
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 15,
-                background: `linear-gradient(90deg, ${p.tone}, var(--accent-3))`,
-                WebkitBackgroundClip: 'text',
-                backgroundClip: 'text',
-                color: 'transparent',
-              }}
-            >
-              {p.metric[0]}
+            <div className="adm-list__cell" data-label="Category" style={{ color: 'var(--fg-dim)', fontSize: 13 }}>
+              {p.category}
             </div>
-            <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
+            <div className="adm-list__cell" data-label="Year" style={{ color: 'var(--fg-dim)', fontSize: 13 }}>
+              {p.year}
+            </div>
+            <div className="adm-list__cell" data-label="Metric">
+              <span
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 15,
+                  background: `linear-gradient(90deg, ${p.tone}, var(--accent-3))`,
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  color: 'transparent',
+                }}
+              >
+                {p.metric[0]}
+              </span>
+            </div>
+            <div className="adm-list__cell adm-list__actions">
               <Link
                 to={`/work/${p.slug}`}
                 target="_blank"

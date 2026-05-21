@@ -17,10 +17,26 @@ import { ProjectsAdmin } from '@/admin/pages/ProjectsAdmin';
 import { ProjectEditor } from '@/admin/pages/ProjectEditor';
 import { TeamAdmin } from '@/admin/pages/TeamAdmin';
 import { ContentAdmin } from '@/admin/pages/ContentAdmin';
+import { MediaAdmin } from '@/admin/pages/MediaAdmin';
 import { Settings as AdminSettings } from '@/admin/pages/Settings';
 import { TWEAK_DEFAULTS } from '@/config/tweaks';
 import { useTweaks } from '@/hooks/useTweaks';
 import { applyPalette } from '@/lib/palette';
+import { hydrateSite } from '@/admin/store';
+import type { Theme } from '@/types/tweaks';
+
+const THEME_STORAGE_KEY = 'zenova.theme';
+
+function readStoredTheme(fallback: Theme): Theme {
+  if (typeof window === 'undefined') return fallback;
+  try {
+    const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+    if (stored === 'light' || stored === 'dark') return stored;
+  } catch {
+    /* private mode etc. */
+  }
+  return fallback;
+}
 
 // Tweaks panel ships only in dev builds — lazy import is tree-shaken in prod.
 const ZenovaTweaks = import.meta.env.DEV
@@ -28,7 +44,14 @@ const ZenovaTweaks = import.meta.env.DEV
   : null;
 
 export function App() {
-  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [t, setTweak] = useTweaks({
+    ...TWEAK_DEFAULTS,
+    theme: readStoredTheme(TWEAK_DEFAULTS.theme),
+  });
+
+  useEffect(() => {
+    void hydrateSite();
+  }, []);
 
   useEffect(() => {
     applyPalette(t.palette);
@@ -41,7 +64,7 @@ export function App() {
     const apply = () => {
       root.setAttribute('data-theme', next);
       try {
-        localStorage.setItem('zenova.theme', next);
+        localStorage.setItem(THEME_STORAGE_KEY, next);
       } catch {
         /* ignore — private mode etc. */
       }
@@ -52,6 +75,19 @@ export function App() {
       apply();
     }
   }, [t.theme]);
+
+  // Sync with other tabs / the admin shell flipping the theme.
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key !== THEME_STORAGE_KEY) return;
+      const next = e.newValue;
+      if (next === 'dark' || next === 'light') {
+        if (next !== t.theme) setTweak('theme', next);
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, [t.theme, setTweak]);
 
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
@@ -159,6 +195,7 @@ function AdminRoutes() {
       <Route path="projects/:slug" element={<ProjectEditor />} />
       <Route path="team" element={<TeamAdmin />} />
       <Route path="content" element={<ContentAdmin />} />
+      <Route path="media" element={<MediaAdmin />} />
       <Route path="settings" element={<AdminSettings />} />
     </Routes>
   );

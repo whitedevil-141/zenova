@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PageHero } from '@/components/layout/PageHero';
 import { CTA } from '@/components/sections/CTA';
-import { ProjectVisual } from '@/components/sections/ProjectVisual';
+import { ProjectPreview } from '@/components/sections/ProjectPreview';
 import { Icon } from '@/components/icons/Icon';
 import { useProjects } from '@/admin/store';
 
@@ -119,7 +119,12 @@ export function WorkPage() {
                     border: '1px solid var(--line)',
                   }}
                 >
-                  <ProjectVisual idx={p.visualIdx} tone={p.tone} animate={hovered === p.slug} />
+                  <ProjectPreview
+                    images={p.images}
+                    visualIdx={p.visualIdx}
+                    tone={p.tone}
+                    animate={hovered === p.slug}
+                  />
                   <div
                     className="mono"
                     style={{

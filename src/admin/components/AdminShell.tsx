@@ -1,6 +1,56 @@
-import type { ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { logout } from '@/admin/store';
+import { currentUser, logout } from '@/admin/store';
+
+import { LogoMark } from "@/components/layout/Logo";
+
+const COLLAPSE_KEY = 'zenova.admin.sidebar.collapsed';
+const THEME_KEY = 'zenova.theme';
+
+type Theme = 'dark' | 'light';
+
+function readStoredCollapsed(): boolean {
+  if (typeof window === 'undefined') return false;
+  return window.localStorage.getItem(COLLAPSE_KEY) === '1';
+}
+
+function writeStoredCollapsed(v: boolean) {
+  if (typeof window === 'undefined') return;
+  window.localStorage.setItem(COLLAPSE_KEY, v ? '1' : '0');
+}
+
+function readStoredTheme(): Theme {
+  if (typeof window === 'undefined') return 'dark';
+  const stored = window.localStorage.getItem(THEME_KEY);
+  if (stored === 'light' || stored === 'dark') return stored;
+  return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+}
+
+function applyTheme(next: Theme) {
+  const root = document.documentElement;
+  const apply = () => {
+    root.setAttribute('data-theme', next);
+    try {
+      window.localStorage.setItem(THEME_KEY, next);
+    } catch {
+      /* private mode */
+    }
+  };
+  const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
+  if (typeof doc.startViewTransition === 'function') {
+    doc.startViewTransition(apply);
+  } else {
+    apply();
+  }
+}
+
+function initialsOf(name: string | undefined, email: string | undefined): string {
+  const source = name?.trim() || email?.trim() || '';
+  if (!source) return '?';
+  const parts = source.split(/\s+/).filter(Boolean);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return source.slice(0, 2).toUpperCase();
+}
 
 interface NavItem {
   to: string;
@@ -68,6 +118,17 @@ const NAV: NavItem[] = [
     ),
   },
   {
+    to: '/admin/media',
+    label: 'Media',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="4" width="18" height="16" rx="2" />
+        <circle cx="9" cy="10" r="2" />
+        <path d="m21 16-5-5-7 7" />
+      </svg>
+    ),
+  },
+  {
     to: '/admin/settings',
     label: 'Settings',
     icon: (
@@ -98,116 +159,302 @@ export function AdminShell({
   children: ReactNode;
 }) {
   const location = useLocation();
+  const [collapsed, setCollapsedRaw] = useState<boolean>(readStoredCollapsed);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [theme, setTheme] = useState<Theme>(readStoredTheme);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+  const user = currentUser();
+
+  const setCollapsed = (v: boolean) => {
+    setCollapsedRaw(v);
+    writeStoredCollapsed(v);
+  };
+
+  const toggleTheme = () => {
+    const next: Theme = theme === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    setTheme(next);
+  };
+
+  // Re-sync theme state if another tab (or the public site) flips it.
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === THEME_KEY && (e.newValue === 'dark' || e.newValue === 'light')) {
+        setTheme(e.newValue);
+        document.documentElement.setAttribute('data-theme', e.newValue);
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
+  // Close user menu on outside click + Esc.
+  useEffect(() => {
+    if (!userMenuOpen) return;
+    const onClick = (e: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setUserMenuOpen(false);
+    };
+    document.addEventListener('mousedown', onClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onClick);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [userMenuOpen]);
+
+  // Close the mobile drawer when navigating between pages.
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
+  // Esc closes the drawer; lock background scroll while it's open.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileOpen(false);
+    };
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [mobileOpen]);
+
+  const rootClass = [
+    'admin-root',
+    collapsed ? 'is-collapsed' : '',
+    mobileOpen ? 'is-mobile-open' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  const handleLogout = () => {
+    logout();
+    window.location.href = '/admin/login';
+  };
 
   return (
-    <div className="admin-root">
+    <div className={rootClass}>
       <div className="admin-shell">
-        <aside className="admin-sidebar">
+        <button
+          type="button"
+          className="admin-backdrop"
+          aria-label="Close navigation"
+          tabIndex={mobileOpen ? 0 : -1}
+          onClick={() => setMobileOpen(false)}
+        />
+
+        <aside className="admin-sidebar" aria-label="Admin navigation">
           <div className="admin-sidebar__brand">
-            <div
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 10,
-                background: 'var(--grad)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#fff',
-                fontFamily: 'var(--font-display)',
-                fontWeight: 600,
-                fontSize: 14,
-                boxShadow: '0 4px 14px rgba(58,91,255,0.4)',
-              }}
-            >
-              Z
-            </div>
-            <div>
+            <LogoMark size={25} />
+            <div className="admin-sidebar__brand-text">
               <div className="admin-sidebar__brand-name">Zenova</div>
               <div className="admin-sidebar__brand-tag">Admin</div>
             </div>
+            <button
+              type="button"
+              className="admin-sidebar__collapse"
+              onClick={() => setCollapsed(!collapsed)}
+              aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              aria-pressed={collapsed}
+              title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                {collapsed ? (
+                  <polyline points="9 18 15 12 9 6" />
+                ) : (
+                  <polyline points="15 18 9 12 15 6" />
+                )}
+              </svg>
+            </button>
           </div>
 
-          <div className="admin-sidebar__section">Manage</div>
-          {NAV.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.end}
-              className={({ isActive }) =>
-                `admin-nav-link${isActive ? ' is-active' : ''}`
-              }
-            >
-              <span className="admin-nav-link__icon">{item.icon}</span>
-              {item.label}
-            </NavLink>
-          ))}
+          <nav className="admin-sidebar__nav" aria-label="Primary">
+            <div className="admin-sidebar__section">Manage</div>
+            {NAV.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.end}
+                title={item.label}
+                className={({ isActive }) =>
+                  `admin-nav-link${isActive ? ' is-active' : ''}`
+                }
+              >
+                <span className="admin-nav-link__icon">{item.icon}</span>
+                <span className="admin-nav-link__label">{item.label}</span>
+              </NavLink>
+            ))}
+          </nav>
 
           <div className="admin-sidebar__footer">
-            <Link to="/" className="admin-nav-link" target="_blank" rel="noreferrer">
+            <Link
+              to="/"
+              className="admin-nav-link"
+              target="_blank"
+              rel="noreferrer"
+              title="View site"
+            >
               <span className="admin-nav-link__icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M7 17 17 7" />
                   <path d="M7 7h10v10" />
                 </svg>
               </span>
-              View site
+              <span className="admin-nav-link__label">View site</span>
             </Link>
-            <button
-              onClick={() => {
-                logout();
-                window.location.href = '/admin/login';
-              }}
-              className="admin-nav-link"
-              style={{ background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left' }}
-            >
-              <span className="admin-nav-link__icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                  <polyline points="16 17 21 12 16 7" />
-                  <line x1="21" y1="12" x2="9" y2="12" />
-                </svg>
-              </span>
-              Sign out
-            </button>
           </div>
         </aside>
 
         <main className="admin-main">
           <div className="admin-topbar">
-            <div className="admin-topbar__crumbs">
-              <Link to="/admin">Admin</Link>
-              {crumbs?.map((c, i) => (
-                <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ opacity: 0.5 }}>/</span>
-                  {c.to ? <Link to={c.to}>{c.label}</Link> : <span style={{ color: 'var(--fg-dim)' }}>{c.label}</span>}
-                </span>
-              ))}
+            <div className="admin-topbar__left">
+              <button
+                type="button"
+                className="admin-topbar__menu"
+                aria-label={mobileOpen ? 'Close navigation' : 'Open navigation'}
+                aria-expanded={mobileOpen}
+                onClick={() => setMobileOpen((o) => !o)}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  {mobileOpen ? (
+                    <>
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </>
+                  ) : (
+                    <>
+                      <line x1="3" y1="6" x2="21" y2="6" />
+                      <line x1="3" y1="12" x2="21" y2="12" />
+                      <line x1="3" y1="18" x2="21" y2="18" />
+                    </>
+                  )}
+                </svg>
+              </button>
+              <div className="admin-topbar__crumbs">
+                <Link to="/admin">Admin</Link>
+                {crumbs?.map((c, i) => (
+                  <span key={i} className="admin-topbar__crumb">
+                    <span className="admin-topbar__crumb-sep">/</span>
+                    {c.to ? (
+                      <Link to={c.to}>{c.label}</Link>
+                    ) : (
+                      <span className="admin-topbar__crumb-current">{c.label}</span>
+                    )}
+                  </span>
+                ))}
+              </div>
             </div>
             <div className="admin-topbar__actions">
-              <span
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 11,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  color: 'var(--fg-faint)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 6,
-                }}
+              <button
+                type="button"
+                className="admin-topbar__icon-btn"
+                onClick={toggleTheme}
+                aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+                title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
               >
-                <span
-                  style={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: '50%',
-                    background: '#10b981',
-                    boxShadow: '0 0 8px #10b981',
-                  }}
-                />
-                {location.pathname}
-              </span>
+                {theme === 'dark' ? (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <circle cx="12" cy="12" r="4" />
+                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+                  </svg>
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                  </svg>
+                )}
+              </button>
+
+              <div className="admin-user-menu" ref={userMenuRef}>
+                <button
+                  type="button"
+                  className="admin-user-menu__trigger"
+                  onClick={() => setUserMenuOpen((o) => !o)}
+                  aria-haspopup="menu"
+                  aria-expanded={userMenuOpen}
+                  aria-label="Account menu"
+                >
+                  <span className="admin-user-menu__avatar" aria-hidden>
+                    {initialsOf(user?.name, user?.email)}
+                  </span>
+                  <span className="admin-user-menu__meta">
+                    <span className="admin-user-menu__name">
+                      {user?.name ?? 'Admin'}
+                    </span>
+                    <span className="admin-user-menu__email">
+                      {user?.email ?? 'signed in'}
+                    </span>
+                  </span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="admin-user-menu__caret">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+                {userMenuOpen && (
+                  <div className="admin-user-menu__panel" role="menu">
+                    <div className="admin-user-menu__head">
+                      <div className="admin-user-menu__avatar admin-user-menu__avatar--lg" aria-hidden>
+                        {initialsOf(user?.name, user?.email)}
+                      </div>
+                      <div className="admin-user-menu__head-text">
+                        <div className="admin-user-menu__name">{user?.name ?? 'Admin'}</div>
+                        <div className="admin-user-menu__email">{user?.email ?? ''}</div>
+                      </div>
+                    </div>
+                    <div className="admin-user-menu__divider" />
+                    <Link
+                      to="/"
+                      className="admin-user-menu__item"
+                      role="menuitem"
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                        <path d="M7 17 17 7" />
+                        <path d="M7 7h10v10" />
+                      </svg>
+                      View public site
+                    </Link>
+                    <Link
+                      to="/admin/settings"
+                      className="admin-user-menu__item"
+                      role="menuitem"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                      </svg>
+                      Settings
+                    </Link>
+                    <div className="admin-user-menu__divider" />
+                    <button
+                      type="button"
+                      className="admin-user-menu__item admin-user-menu__item--danger"
+                      role="menuitem"
+                      onClick={() => {
+                        setUserMenuOpen(false);
+                        handleLogout();
+                      }}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                      </svg>
+                      Sign out
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -217,7 +464,7 @@ export function AdminShell({
                 <h1 className="admin-page__title">{title}</h1>
                 {sub && <p className="admin-page__sub">{sub}</p>}
               </div>
-              {actions && <div style={{ display: 'flex', gap: 10 }}>{actions}</div>}
+              {actions && <div className="admin-page__actions">{actions}</div>}
             </header>
             {children}
           </div>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { AdminShell } from '@/admin/components/AdminShell';
 import { ColorField, TextArea, TextField, Toast } from '@/admin/components/Form';
-import { teamStore, useTeam, type TeamMember } from '@/admin/store';
+import { patchTeamMember, teamStore, useTeam, type TeamMember } from '@/admin/store';
 
 function uid() {
   return 't' + Math.random().toString(36).slice(2, 9);
@@ -11,22 +11,25 @@ export function TeamAdmin() {
   const [team] = useTeam();
   const [toast, setToast] = useState<string | null>(null);
 
+  const showError = (err: unknown) =>
+    setToast(err instanceof Error ? err.message : 'Save failed.');
+
   const update = (i: number, patch: Partial<TeamMember>) => {
-    const next = [...team];
-    next[i] = { ...next[i], ...patch };
-    teamStore.set(next);
+    patchTeamMember(team[i].id, patch).catch(showError);
   };
 
   const remove = (i: number) => {
     if (!window.confirm(`Remove ${team[i].name}?`)) return;
-    teamStore.set(team.filter((_, idx) => idx !== i));
+    teamStore.set(team.filter((_, idx) => idx !== i)).catch(showError);
   };
 
   const add = () => {
-    teamStore.set([
-      ...team,
-      { id: uid(), name: 'New member', role: 'Role', bio: '', initials: 'NM', tone: '#3a5bff' },
-    ]);
+    teamStore
+      .set([
+        ...team,
+        { id: uid(), name: 'New member', role: 'Role', bio: '', initials: 'NM', tone: '#3a5bff' },
+      ])
+      .catch(showError);
   };
 
   const move = (i: number, dir: -1 | 1) => {
@@ -34,7 +37,7 @@ export function TeamAdmin() {
     if (j < 0 || j >= team.length) return;
     const next = [...team];
     [next[i], next[j]] = [next[j], next[i]];
-    teamStore.set(next);
+    teamStore.set(next).catch(showError);
   };
 
   return (
@@ -47,7 +50,9 @@ export function TeamAdmin() {
           <button
             className="adm-btn"
             onClick={() => {
-              if (window.confirm('Reset team to defaults?')) teamStore.reset();
+              if (window.confirm('Reset team to defaults?')) {
+                teamStore.reset().catch(showError);
+              }
             }}
           >
             Reset

@@ -2,9 +2,9 @@ import { useRef, useState } from 'react';
 import { AdminShell } from '@/admin/components/AdminShell';
 import { Field, TextField, Toast } from '@/admin/components/Form';
 import {
-  brandStore,
   exportAll,
   importAll,
+  patchBrand,
   resetAll,
   useBrand,
   type BrandSettings,
@@ -19,8 +19,12 @@ export function Settings() {
   const [toast, setToast] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const patch = (updater: (prev: BrandSettings) => BrandSettings) => {
-    brandStore.set(updater);
+  const showError = (err: unknown) => {
+    setToast(err instanceof Error ? err.message : 'Save failed.');
+  };
+
+  const updateBrand = (delta: Partial<BrandSettings>) => {
+    patchBrand(delta).catch(showError);
   };
 
   const handleExport = () => {
@@ -49,13 +53,12 @@ export function Settings() {
 
   const updateLocation = (
     i: number,
-    patchObj: Partial<BrandSettings['locations'][number]>
+    patchObj: Partial<BrandSettings['locations'][number]>,
   ) => {
-    patch((prev) => {
-      const locs = [...prev.locations];
-      locs[i] = { ...locs[i], ...patchObj };
-      return { ...prev, locations: locs };
-    });
+    const locations = brand.locations.map((l, idx) =>
+      idx === i ? { ...l, ...patchObj } : l,
+    );
+    updateBrand({ locations });
   };
 
   return (
@@ -87,10 +90,19 @@ export function Settings() {
           />
           <button
             className="adm-btn adm-btn--danger"
-            onClick={() => {
-              if (window.confirm('Reset ALL content (services, projects, team, site copy, brand) to factory defaults? This cannot be undone.')) {
-                resetAll();
+            onClick={async () => {
+              if (
+                !window.confirm(
+                  'Reset ALL content (services, projects, team, site copy, brand) to factory defaults on the server? This cannot be undone.',
+                )
+              ) {
+                return;
+              }
+              try {
+                await resetAll();
                 setToast('Everything reset.');
+              } catch (err) {
+                setToast(err instanceof Error ? err.message : 'Reset failed.');
               }
             }}
           >
@@ -105,24 +117,24 @@ export function Settings() {
           <TextField
             label="Studio name"
             value={brand.studioName}
-            onChange={(v) => patch((p) => ({ ...p, studioName: v }))}
+            onChange={(v) => updateBrand({ studioName: v })}
           />
           <TextField
             label="Tagline"
             value={brand.tagline}
-            onChange={(v) => patch((p) => ({ ...p, tagline: v }))}
+            onChange={(v) => updateBrand({ tagline: v })}
           />
         </div>
         <div className="adm-row adm-row--2">
           <TextField
             label="Contact email"
             value={brand.contactEmail}
-            onChange={(v) => patch((p) => ({ ...p, contactEmail: v }))}
+            onChange={(v) => updateBrand({ contactEmail: v })}
           />
           <TextField
             label="Careers email"
             value={brand.careersEmail}
-            onChange={(v) => patch((p) => ({ ...p, careersEmail: v }))}
+            onChange={(v) => updateBrand({ careersEmail: v })}
           />
         </div>
       </div>
@@ -133,13 +145,12 @@ export function Settings() {
           <button
             className="adm-btn adm-btn--sm"
             onClick={() =>
-              patch((p) => ({
-                ...p,
+              updateBrand({
                 locations: [
-                  ...p.locations,
+                  ...brand.locations,
                   { id: uid(), city: '', tz: '', detail: '' },
                 ],
-              }))
+              })
             }
           >
             + Add location
@@ -176,10 +187,9 @@ export function Settings() {
             <button
               className="adm-btn adm-btn--sm adm-btn--danger"
               onClick={() =>
-                patch((p) => ({
-                  ...p,
-                  locations: p.locations.filter((_, idx) => idx !== i),
-                }))
+                updateBrand({
+                  locations: brand.locations.filter((_, idx) => idx !== i),
+                })
               }
             >
               ✕
@@ -190,19 +200,29 @@ export function Settings() {
 
       <div className="adm-card" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         <div className="adm-label">Data backup</div>
-        <Field label="What lives in localStorage" hint="Edits are stored client-side in your browser only. Export to back up, import to restore.">
+        <Field
+          label="Source of truth"
+          hint="Content is stored in the Supabase Postgres backend. Local snapshots are kept only as a cache for offline viewing — export to back up the live data, import to restore from a JSON dump."
+        >
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
               gap: 8,
               fontFamily: 'var(--font-mono)',
               fontSize: 11,
             }}
           >
-            {['services', 'projects', 'team', 'content', 'brand', 'auth'].map((k) => (
+            {[
+              '/api/v1/admin/services',
+              '/api/v1/admin/projects',
+              '/api/v1/admin/team',
+              '/api/v1/admin/content',
+              '/api/v1/admin/brand',
+              '/api/v1/admin/uploads/image',
+            ].map((k) => (
               <span key={k} className="adm-badge" style={{ justifyContent: 'flex-start' }}>
-                zenova.admin.{k}
+                {k}
               </span>
             ))}
           </div>

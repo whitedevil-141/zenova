@@ -9,11 +9,17 @@ import {
   TextField,
   Toast,
 } from '@/admin/components/Form';
-import { projectsStore, useProjects } from '@/admin/store';
-import type { ProjectDetail, ProjectMetric, ProjectSection } from '@/data/projects';
+import { ImageField } from '@/admin/components/ImageField';
+import { patchProject, projectsStore, useProjects } from '@/admin/store';
+import type {
+  ProjectDetail,
+  ProjectImage,
+  ProjectMetric,
+  ProjectSection,
+} from '@/data/projects';
 import { emptyProject } from './ProjectsAdmin';
 
-type Tab = 'basics' | 'metrics' | 'sections' | 'meta' | 'testimonial';
+type Tab = 'basics' | 'images' | 'metrics' | 'sections' | 'meta' | 'testimonial';
 
 export function ProjectEditor() {
   const { slug = '' } = useParams();
@@ -45,25 +51,34 @@ export function ProjectEditor() {
     setDraft((d) => (d ? { ...d, [key]: value } : d));
   };
 
-  const save = () => {
+  const save = async () => {
     if (!draft) return;
     if (isNew) {
       if (projects.some((p) => p.slug === draft.slug)) {
         setToast(`Slug "${draft.slug}" already exists — pick another.`);
         return;
       }
-      projectsStore.set([...projects, draft]);
-      setToast('Case study created');
-      nav(`/admin/projects/${draft.slug}`, { replace: true });
+      try {
+        await projectsStore.set([...projects, draft]);
+        setToast('Case study created');
+        nav(`/admin/projects/${draft.slug}`, { replace: true });
+      } catch (err) {
+        setToast(err instanceof Error ? err.message : 'Save failed.');
+      }
     } else {
-      projectsStore.set(projects.map((p) => (p.slug === slug ? draft : p)));
-      setToast('Saved');
-      if (draft.slug !== slug) nav(`/admin/projects/${draft.slug}`, { replace: true });
+      try {
+        await patchProject(slug, draft);
+        setToast('Saved');
+        if (draft.slug !== slug) nav(`/admin/projects/${draft.slug}`, { replace: true });
+      } catch (err) {
+        setToast(err instanceof Error ? err.message : 'Save failed.');
+      }
     }
   };
 
   const TABS: Array<{ id: Tab; label: string }> = [
     { id: 'basics', label: 'Basics' },
+    { id: 'images', label: `Images (${draft.images?.length ?? 0})` },
     { id: 'metrics', label: `Metrics (${draft.metrics.length})` },
     { id: 'sections', label: `Narrative (${draft.sections.length})` },
     { id: 'meta', label: 'Stack & deliverables' },
@@ -193,6 +208,13 @@ export function ProjectEditor() {
         </div>
       )}
 
+      {tab === 'images' && (
+        <ImagesEditor
+          images={draft.images ?? []}
+          onChange={(v) => update('images', v)}
+        />
+      )}
+
       {tab === 'metrics' && (
         <MetricsEditor metrics={draft.metrics} onChange={(v) => update('metrics', v)} />
       )}
@@ -245,6 +267,121 @@ export function ProjectEditor() {
 
       <Toast message={toast} onClear={() => setToast(null)} />
     </AdminShell>
+  );
+}
+
+function ImagesEditor({
+  images,
+  onChange,
+}: {
+  images: ProjectImage[];
+  onChange: (next: ProjectImage[]) => void;
+}) {
+  const update = (i: number, patch: Partial<ProjectImage>) => {
+    const next = [...images];
+    next[i] = { ...next[i], ...patch };
+    onChange(next);
+  };
+  const move = (i: number, dir: -1 | 1) => {
+    const j = i + dir;
+    if (j < 0 || j >= images.length) return;
+    const next = [...images];
+    [next[i], next[j]] = [next[j], next[i]];
+    onChange(next);
+  };
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <p className="adm-help" style={{ margin: 0 }}>
+        First image is used as the card thumbnail and detail-page hero. Any extras
+        render as a gallery below the hero. Leave empty to use the animated SVG fallback.
+      </p>
+      {images.map((img, i) => (
+        <div key={i} className="adm-card" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+            <div className="adm-label">
+              {i === 0 ? 'Hero image' : `Image ${i + 1}`}
+            </div>
+            <div style={{ display: 'flex', gap: 6 }}>
+              <button
+                className="adm-btn adm-btn--sm"
+                onClick={() => move(i, -1)}
+                disabled={i === 0}
+              >
+                ↑
+              </button>
+              <button
+                className="adm-btn adm-btn--sm"
+                onClick={() => move(i, 1)}
+                disabled={i === images.length - 1}
+              >
+                ↓
+              </button>
+              <button
+                className="adm-btn adm-btn--sm adm-btn--danger"
+                onClick={() => onChange(images.filter((_, idx) => idx !== i))}
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: 14, alignItems: 'start' }}>
+            <div
+              style={{
+                aspectRatio: '4 / 3',
+                borderRadius: 12,
+                overflow: 'hidden',
+                border: '1px solid var(--line)',
+                background: '#0a0b13',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--fg-faint)',
+                fontSize: 12,
+              }}
+            >
+              {img.src ? (
+                <img
+                  src={img.src}
+                  alt={img.alt ?? ''}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              ) : (
+                'No URL'
+              )}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <ImageField
+                value={img.src}
+                onChange={(v) => update(i, { src: v })}
+                prefix="projects"
+                showPreview={false}
+              />
+              <div className="adm-row adm-row--2">
+                <TextField
+                  label="Alt text"
+                  value={img.alt ?? ''}
+                  onChange={(v) => update(i, { alt: v })}
+                  placeholder="Short description"
+                />
+                <TextField
+                  label="Caption (optional)"
+                  value={img.caption ?? ''}
+                  onChange={(v) => update(i, { caption: v })}
+                  placeholder="Shown under gallery images"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+      <button
+        className="adm-btn"
+        onClick={() => onChange([...images, { src: '', alt: '' }])}
+        style={{ alignSelf: 'flex-start' }}
+      >
+        + Add image
+      </button>
+    </div>
   );
 }
 
