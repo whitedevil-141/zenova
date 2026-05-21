@@ -14,4 +14,4 @@ structlog>=24.4
 slowapi>=0.1.9
 httpx>=0.28
 orjson>=3.10
-'pydantic[email]'
+pydantic[email]
