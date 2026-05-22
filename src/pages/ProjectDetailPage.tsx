@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { PageHero } from '@/components/layout/PageHero';
 import { CTA } from '@/components/sections/CTA';
@@ -70,12 +71,8 @@ export function ProjectDetailPage() {
       <section className="sec" style={{ paddingTop: 56 }}>
         <div className="container">
           <div
+            className="proj-detail-hero"
             style={{
-              aspectRatio: '21 / 9',
-              borderRadius: 24,
-              position: 'relative',
-              overflow: 'hidden',
-              border: '1px solid var(--line-strong)',
               background: `
                 linear-gradient(135deg, ${project.tone}40, ${project.tone}10),
                 repeating-linear-gradient(45deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 12px),
@@ -339,11 +336,9 @@ export function ProjectDetailPage() {
       </section>
 
       <section className="sec" style={{ paddingTop: 56 }}>
-        <div
-          className="container"
-          style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: 56, alignItems: 'start' }}
-        >
+        <div className="container proj-narrative">
           <aside
+            className="proj-narrative__aside"
             style={{
               position: 'sticky',
               top: 110,
@@ -495,13 +490,8 @@ export function ProjectDetailPage() {
       <section className="sec" style={{ paddingTop: 56 }}>
         <div className="container" style={{ maxWidth: 920 }}>
           <div
-            className="card"
+            className={`card proj-testimonial`}
             style={{
-              position: 'relative',
-              overflow: 'hidden',
-              padding: '56px 48px',
-              borderRadius: 28,
-              border: '1px solid var(--line-strong)',
               background: `linear-gradient(135deg, ${project.tone}22, rgba(255,255,255,0.01))`,
             }}
           >
@@ -579,6 +569,22 @@ export function ProjectDetailPage() {
       {hasImages && (
         <ImageLightbox images={images} index={lbIndex} onIndex={setLbIndex} />
       )}
+
+      {hasLiveUrl && createPortal(
+        <a
+          href={liveUrl}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="proj-fab"
+          title={`Visit live site: ${liveUrl}`}
+          aria-label={`Visit live site for ${project.client} — opens in a new tab`}
+        >
+          <span className="proj-fab__dot" aria-hidden="true" />
+          Live site
+          <Icon.ArrowUpRight size={14} />
+        </a>,
+        document.body,
+      )}
     </>
   );
 }
@@ -608,21 +614,7 @@ function NextProjectCard({ project }: { project: ProjectDetail }) {
   return (
     <Link
       to={`/work/${project.slug}`}
-      className="card"
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: 32,
-        padding: 32,
-        borderRadius: 24,
-        border: '1px solid var(--line)',
-        background:
-          'linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.005))',
-        textDecoration: 'none',
-        color: 'var(--fg)',
-        overflow: 'hidden',
-        position: 'relative',
-      }}
+      className="card proj-next-card"
     >
       <div
         style={{

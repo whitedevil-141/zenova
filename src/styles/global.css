@@ -770,6 +770,92 @@ section.sec {
   animation-play-state: paused;
 }
 
+/* ---------- Project detail page responsive ---------- */
+
+/* Hero banner */
+.proj-detail-hero {
+  aspect-ratio: 21 / 9;
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+}
+@media (max-width: 860px) {
+  .proj-detail-hero {
+    aspect-ratio: 16 / 9;
+    border-radius: 18px;
+  }
+}
+@media (max-width: 480px) {
+  .proj-detail-hero {
+    aspect-ratio: 4 / 3;
+    border-radius: 14px;
+  }
+}
+
+/* Narrative (sidebar + article) */
+.proj-narrative {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 56px;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .proj-narrative {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .proj-narrative__aside {
+    position: static !important;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 20px;
+  }
+}
+
+/* Next-project card */
+.proj-next-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  padding: 32px;
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.005));
+  text-decoration: none;
+  color: var(--fg);
+  overflow: hidden;
+  position: relative;
+}
+@media (max-width: 680px) {
+  .proj-next-card {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 18px;
+  }
+}
+
+/* Testimonial card */
+.proj-testimonial {
+  position: relative;
+  overflow: hidden;
+  padding: 56px 48px;
+  border-radius: 28px;
+  border: 1px solid var(--line-strong);
+}
+@media (max-width: 680px) {
+  .proj-testimonial {
+    padding: 32px 24px;
+    border-radius: 20px;
+  }
+}
+@media (max-width: 400px) {
+  .proj-testimonial {
+    padding: 24px 16px;
+  }
+}
+
 /* ---------- Project gallery + lightbox ---------- */
 
 .proj-hero {
@@ -845,6 +931,87 @@ section.sec {
   background: rgba(0, 0, 0, 0.7);
   border-color: rgba(255, 255, 255, 0.32);
   transform: translateY(-1px);
+}
+
+/* Sticky floating FAB on project detail page */
+@keyframes fab-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.88);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes fab-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(61, 220, 151, 0.55); }
+  60%       { box-shadow: 0 0 0 8px rgba(61, 220, 151, 0); }
+}
+
+.proj-fab {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 22px;
+  border-radius: 50px;
+  background: rgba(10, 11, 19, 0.88);
+  border: 1px solid rgba(61, 220, 151, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    0 12px 40px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  animation: fab-in 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
+}
+.proj-fab:hover {
+  transform: translateY(-3px);
+  background: rgba(14, 16, 26, 0.95);
+  border-color: rgba(61, 220, 151, 0.7);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.45),
+    0 20px 56px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(61, 220, 151, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.07) inset;
+}
+.proj-fab:active {
+  transform: translateY(-1px);
+}
+.proj-fab__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3ddc97;
+  flex-shrink: 0;
+  animation: fab-pulse 2.2s ease infinite;
+}
+@media (max-width: 480px) {
+  .proj-fab {
+    bottom: 20px;
+    right: 16px;
+    padding: 12px 16px;
+    font-size: 12px;
+    gap: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .proj-fab { animation: none; }
+  .proj-fab__dot { animation: none; }
 }
 
 /* Live-view pill on /work cards */
