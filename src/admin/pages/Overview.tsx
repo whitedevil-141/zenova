@@ -130,36 +130,75 @@ export function Overview() {
             Recent case studies
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {projects.slice(0, 5).map((p) => (
-              <Link
-                key={p.slug}
-                to={`/admin/projects/${p.slug}`}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'auto 1fr auto',
-                  gap: 14,
-                  alignItems: 'center',
-                  padding: '12px 14px',
-                  borderRadius: 10,
-                  border: '1px solid var(--line)',
-                  background: 'rgba(255,255,255,0.02)',
-                  textDecoration: 'none',
-                  color: 'var(--fg)',
-                }}
-              >
-                <span
-                  className="adm-badge__dot"
-                  style={{ background: p.tone, boxShadow: `0 0 8px ${p.tone}` }}
-                />
-                <div>
-                  <div style={{ fontWeight: 500, fontSize: 14 }}>{p.client}</div>
-                  <div style={{ fontSize: 12, color: 'var(--fg-faint)' }}>
-                    {p.category} · {p.year} · {p.metric[0]}
+            {projects.slice(0, 5).map((p) => {
+              const live = p.liveUrl?.trim();
+              return (
+                <Link
+                  key={p.slug}
+                  to={`/admin/projects/${p.slug}`}
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'auto 1fr auto auto',
+                    gap: 14,
+                    alignItems: 'center',
+                    padding: '12px 14px',
+                    borderRadius: 10,
+                    border: '1px solid var(--line)',
+                    background: 'rgba(255,255,255,0.02)',
+                    textDecoration: 'none',
+                    color: 'var(--fg)',
+                  }}
+                >
+                  <span
+                    className="adm-badge__dot"
+                    style={{ background: p.tone, boxShadow: `0 0 8px ${p.tone}` }}
+                  />
+                  <div>
+                    <div style={{ fontWeight: 500, fontSize: 14 }}>{p.client}</div>
+                    <div style={{ fontSize: 12, color: 'var(--fg-faint)' }}>
+                      {p.category} · {p.year} · {p.metric[0]}
+                    </div>
                   </div>
-                </div>
-                <span className="adm-badge">{p.duration}</span>
-              </Link>
-            ))}
+                  {live ? (
+                    <a
+                      href={live}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      onClick={(e) => e.stopPropagation()}
+                      title={`Open live site: ${live}`}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 4,
+                        padding: '4px 9px',
+                        borderRadius: 999,
+                        background: 'rgba(61, 220, 151, 0.1)',
+                        border: '1px solid rgba(61, 220, 151, 0.3)',
+                        color: 'var(--fg)',
+                        fontSize: 11,
+                        textDecoration: 'none',
+                        fontFamily: 'var(--font-mono)',
+                      }}
+                    >
+                      <span
+                        aria-hidden="true"
+                        style={{
+                          width: 5,
+                          height: 5,
+                          borderRadius: '50%',
+                          background: '#3ddc97',
+                          boxShadow: '0 0 5px #3ddc97',
+                        }}
+                      />
+                      Live ↗
+                    </a>
+                  ) : (
+                    <span />
+                  )}
+                  <span className="adm-badge">{p.duration}</span>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </div>

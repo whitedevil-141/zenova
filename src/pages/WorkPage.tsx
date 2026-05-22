@@ -157,11 +157,28 @@ export function WorkPage() {
                       border: '1px solid var(--line)',
                       transform: hovered === p.slug ? 'rotate(0)' : 'rotate(-45deg)',
                       transition: 'transform .4s cubic-bezier(.2,.7,.2,1)',
-                      
+
                     }}
                   >
                     <Icon.ArrowUpRight size={16} />
                   </div>
+                  {p.liveUrl?.trim() && (
+                    <button
+                      type="button"
+                      className="work-card__live"
+                      style={{ left: 14, bottom: 14 }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.open(p.liveUrl, '_blank', 'noopener,noreferrer');
+                      }}
+                      title={`Open live site: ${p.liveUrl}`}
+                      aria-label={`Open live site for ${p.client} in a new tab`}
+                    >
+                      <span className="work-card__live-dot" aria-hidden="true" />
+                      Live <Icon.ArrowUpRight size={11} />
+                    </button>
+                  )}
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

@@ -42,6 +42,7 @@ export interface ProjectDetail {
   testimonial: ProjectTestimonial;
   visualIdx: number;
   images?: ProjectImage[];
+  liveUrl?: string;
 }
 
 export const PROJECTS: ProjectDetail[] = [

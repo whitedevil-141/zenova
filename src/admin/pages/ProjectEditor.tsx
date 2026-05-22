@@ -138,6 +138,13 @@ export function ProjectEditor() {
             <TextField label="Year" value={draft.year} onChange={(v) => update('year', v)} />
           </div>
           <TextField label="Title" value={draft.title} onChange={(v) => update('title', v)} />
+          <TextField
+            label="Live site URL"
+            value={draft.liveUrl ?? ''}
+            onChange={(v) => update('liveUrl', v)}
+            placeholder="https://example.com"
+            hint="Optional. Adds a 'Visit live site' button on the project detail hero."
+          />
           <TextArea label="Summary" hint="Shown on the /work card." value={draft.summary} onChange={(v) => update('summary', v)} rows={2} />
           <TextArea label="Hero copy" hint="Opening sentences on the detail page." value={draft.hero} onChange={(v) => update('hero', v)} rows={3} />
           <div className="adm-row adm-row--3">

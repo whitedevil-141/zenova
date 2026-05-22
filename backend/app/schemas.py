@@ -118,6 +118,7 @@ class ProjectDetail(_Base):
     testimonial: ProjectTestimonial
     visualIdx: int = Field(ge=0, le=10)
     images: list[ProjectImage] = Field(default_factory=list)
+    liveUrl: str | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -296,6 +297,7 @@ class ProjectPatch(_Base):
     testimonial: ProjectTestimonial | None = None
     visualIdx: int | None = Field(default=None, ge=0, le=10)
     images: list[ProjectImage] | None = None
+    liveUrl: str | None = None
 
 
 class TokenPair(_Base):
