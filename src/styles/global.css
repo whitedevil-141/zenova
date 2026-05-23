@@ -467,6 +467,14 @@ section.sec {
 }
 
 @media (max-width: 900px) {
+  .live-progress-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+  .client-overview-grid {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
   .process-grid {
     grid-template-columns: 1fr !important;
     gap: 24px !important;

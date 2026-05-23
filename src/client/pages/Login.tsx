@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { login } from '@/admin/store';
-import { ApiError } from '@/lib/api';
-import { hasRole, isAuthed, logout } from '@/lib/session';
+import { clientLogin, isClientAuthed } from '@/client/store';
 
-export function AdminLogin() {
+export function ClientLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -16,26 +14,10 @@ export function AdminLogin() {
     setError(null);
     setBusy(true);
     try {
-      const { user } = await login(email.trim().toLowerCase(), password);
-      if (user.role !== 'admin') {
-        // Right credentials, wrong portal. Don't keep them signed in here.
-        logout();
-        if (user.role === 'team') {
-          setError('This account is a team account — sign in at /team/login.');
-        } else if (user.role === 'client') {
-          setError('This account is a client account — sign in at /client/login.');
-        } else {
-          setError('This account does not have admin access.');
-        }
-        return;
-      }
-      nav('/admin', { replace: true });
+      await clientLogin(email.trim().toLowerCase(), password);
+      nav('/client', { replace: true });
     } catch (err) {
-      if (err instanceof ApiError) {
-        setError(err.code === 'rate_limited' ? 'Too many attempts. Try again shortly.' : err.message);
-      } else {
-        setError('Could not reach the server. Check your connection.');
-      }
+      setError(err instanceof Error ? err.message : 'Sign-in failed.');
     } finally {
       setBusy(false);
     }
@@ -62,9 +44,9 @@ export function AdminLogin() {
         >
           Z
         </div>
-        <h1 className="adm-login__title">Sign in to admin</h1>
+        <h1 className="adm-login__title">Sign in to your project</h1>
         <p className="adm-login__sub">
-          Use the email and password set up via <code>python -m scripts.create_admin</code>.
+          See live progress, milestones, and what shipped today. Use the credentials your project lead sent you.
         </p>
         <div className="adm-field">
           <label className="adm-label">Email</label>
@@ -72,7 +54,7 @@ export function AdminLogin() {
             type="email"
             className="adm-input"
             value={email}
-            placeholder="you@zenova.bd"
+            placeholder="you@yourcompany.com"
             autoComplete="username"
             autoFocus
             required
@@ -91,15 +73,13 @@ export function AdminLogin() {
             placeholder="••••••••"
             autoComplete="current-password"
             required
-            minLength={8}
+            minLength={6}
             onChange={(e) => {
               setPassword(e.target.value);
               setError(null);
             }}
           />
-          {error && (
-            <p style={{ color: '#ff6b6b', fontSize: 13, margin: 0 }}>{error}</p>
-          )}
+          {error && <p style={{ color: '#ff6b6b', fontSize: 13, margin: 0 }}>{error}</p>}
         </div>
         <button
           type="submit"
@@ -109,6 +89,17 @@ export function AdminLogin() {
         >
           {busy ? 'Signing in…' : 'Continue'}
         </button>
+        <p
+          style={{
+            fontSize: 11,
+            color: 'var(--fg-faint)',
+            textAlign: 'center',
+            marginTop: 6,
+            lineHeight: 1.5,
+          }}
+        >
+          Preview build · any email + 6+ char password gets you in to the demo dashboard.
+        </p>
         <a
           href="/"
           style={{
@@ -126,9 +117,9 @@ export function AdminLogin() {
   );
 }
 
-export function AuthGate({ children }: { children: React.ReactNode }) {
-  if (!isAuthed() || !hasRole('admin')) {
-    return <Navigate to="/admin/login" replace />;
+export function ClientAuthGate({ children }: { children: React.ReactNode }) {
+  if (!isClientAuthed()) {
+    return <Navigate to="/client/login" replace />;
   }
   return <>{children}</>;
 }

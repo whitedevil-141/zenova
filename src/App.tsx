@@ -11,6 +11,10 @@ import { ProjectDetailPage } from '@/pages/ProjectDetailPage';
 import { AboutPage } from '@/pages/AboutPage';
 import { AdminLogin, AuthGate } from '@/admin/pages/Login';
 import { Overview } from '@/admin/pages/Overview';
+import { ClientLogin, ClientAuthGate } from '@/client/pages/Login';
+import { ClientOverview } from '@/client/pages/Overview';
+import { TeamLogin, TeamAuthGate } from '@/team/pages/Login';
+import { TeamOverview } from '@/team/pages/Overview';
 import { ServicesAdmin } from '@/admin/pages/ServicesAdmin';
 import { ServiceEditor } from '@/admin/pages/ServiceEditor';
 import { ProjectsAdmin } from '@/admin/pages/ProjectsAdmin';
@@ -99,6 +103,24 @@ export function App() {
             <AuthGate>
               <AdminRoutes />
             </AuthGate>
+          }
+        />
+        <Route path="/client/login" element={<ClientLogin />} />
+        <Route
+          path="/client/*"
+          element={
+            <ClientAuthGate>
+              <ClientRoutes />
+            </ClientAuthGate>
+          }
+        />
+        <Route path="/team/login" element={<TeamLogin />} />
+        <Route
+          path="/team/*"
+          element={
+            <TeamAuthGate>
+              <TeamRoutes />
+            </TeamAuthGate>
           }
         />
         <Route
@@ -197,6 +219,22 @@ function AdminRoutes() {
       <Route path="content" element={<ContentAdmin />} />
       <Route path="media" element={<MediaAdmin />} />
       <Route path="settings" element={<AdminSettings />} />
+    </Routes>
+  );
+}
+
+function ClientRoutes() {
+  return (
+    <Routes>
+      <Route index element={<ClientOverview />} />
+    </Routes>
+  );
+}
+
+function TeamRoutes() {
+  return (
+    <Routes>
+      <Route index element={<TeamOverview />} />
     </Routes>
   );
 }

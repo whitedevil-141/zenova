@@ -15,12 +15,12 @@ import { useEffect, useReducer, useRef } from 'react';
 import { ApiError, api } from '@/lib/api';
 import {
   clearTokens,
-  getAccessToken,
   getStoredUser,
-  setStoredUser,
-  setTokens,
-  type AdminUser,
-} from '@/lib/auth';
+  hasRole,
+  login as sessionLogin,
+  logout as sessionLogout,
+  type SessionUser as AdminUser,
+} from '@/lib/session';
 import { SERVICES as DEFAULT_SERVICES, type ServiceDetail } from '@/data/services';
 import { PROJECTS as DEFAULT_PROJECTS, type ProjectDetail } from '@/data/projects';
 
@@ -619,22 +619,22 @@ export interface LoginResult {
 }
 
 export async function login(email: string, password: string): Promise<LoginResult> {
-  const res = await api<{
-    user: AdminUser;
-    tokens: { access_token: string; refresh_token: string; token_type: string; expires_in: number };
-  }>('/auth/login', { method: 'POST', body: { email, password } });
-  setTokens(res.tokens);
-  setStoredUser(res.user);
-  return { user: res.user };
+  const user = await sessionLogin(email, password);
+  return { user };
 }
 
 export function logout(): void {
-  clearTokens();
+  sessionLogout();
 }
 
+/** True only when an admin is signed in (the admin shell is admin-only). */
 export function isAuthed(): boolean {
-  return getAccessToken() !== null;
+  return hasRole('admin');
 }
+
+/** Re-export so legacy imports keep working. */
+export type { AdminUser };
+export { type SessionUser, type Role } from '@/lib/session';
 
 export function currentUser(): AdminUser | null {
   return getStoredUser();
@@ -643,7 +643,6 @@ export function currentUser(): AdminUser | null {
 export async function refreshCurrentUser(): Promise<AdminUser | null> {
   try {
     const user = await api<AdminUser>('/auth/me', { auth: true });
-    setStoredUser(user);
     return user;
   } catch (err) {
     if (err instanceof ApiError && err.status === 401) {
