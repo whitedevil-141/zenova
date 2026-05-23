@@ -19,12 +19,20 @@ from typing import Any
 from sqlalchemy import delete, select
 
 from app.db import session_scope
-from app.models import BrandSettings, Project, Service, SiteContent, TeamMember
+from app.models import (
+    BrandSettings,
+    ClientProject,
+    Project,
+    Service,
+    SiteContent,
+    TeamMember,
+)
 from app.schemas import (
     BrandSettings as BrandSchema,
 )
 from app.schemas import (
     ProjectDetail,
+    ProjectSnapshot,
     ServiceDetail,
 )
 from app.schemas import (
@@ -48,6 +56,7 @@ async def seed(force: bool) -> None:
         team_raw = _load("team")
         content_raw = _load("content")
         brand_raw = _load("brand")
+        client_project_raw = _load("client_project")
 
         # Validate every fixture through Pydantic before touching the DB.
         services = [ServiceDetail.model_validate(s) for s in services_raw]
@@ -55,6 +64,7 @@ async def seed(force: bool) -> None:
         team = [TeamMemberSchema.model_validate(t) for t in team_raw]
         content = SiteContentSchema.model_validate(content_raw)
         brand = BrandSchema.model_validate(brand_raw)
+        client_project = ProjectSnapshot.model_validate(client_project_raw)
 
         if force:
             await db.execute(delete(Service))
@@ -90,6 +100,12 @@ async def seed(force: bool) -> None:
             db.add(BrandSettings(id=1, data=brand.model_dump()))
         elif force:
             brand_row.data = brand.model_dump()
+
+        cp_row = await db.get(ClientProject, 1)
+        if cp_row is None:
+            db.add(ClientProject(id=1, data=client_project.model_dump()))
+        elif force:
+            cp_row.data = client_project.model_dump()
 
     print("Seed complete.")
 

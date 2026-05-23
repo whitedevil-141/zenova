@@ -11,8 +11,11 @@ from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, StringConstraints
 
+from typing import Literal
+
 Slug = Annotated[str, StringConstraints(pattern=r"^[a-z0-9][a-z0-9\-_]*$", max_length=120)]
 HexColor = Annotated[str, StringConstraints(pattern=r"^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$")]
+Role = Literal["admin", "team", "client"]
 
 
 class _Base(BaseModel):
@@ -243,6 +246,75 @@ class BrandSettings(_Base):
 
 
 # ---------------------------------------------------------------------------
+# Client project snapshot — shared between team portal (writes) and client
+# dashboard (reads). Mirrors the TypeScript types in src/lib/projectData.ts.
+# ---------------------------------------------------------------------------
+
+
+class PhaseDeliverable(_Base):
+    id: str
+    label: str
+    done: bool = False
+
+
+class ProjectPhase(_Base):
+    id: str
+    n: str
+    title: str
+    status: Literal["done", "active", "next"]
+    pct: int = Field(ge=0, le=100)
+    startedOn: str | None = None
+    endedOn: str | None = None
+    deliverables: list[PhaseDeliverable] = Field(default_factory=list)
+
+
+class ProjectActivity(_Base):
+    id: str
+    when: str
+    whoName: str
+    whoInitial: str
+    whoTone: HexColor
+    what: str
+    kind: Literal["design", "build", "copy", "growth", "other"] = "other"
+
+
+class ProjectStat(_Base):
+    id: str
+    label: str
+    value: str
+
+
+class ProjectTeamMember(_Base):
+    id: str
+    name: str
+    role: str
+    initial: str
+    tone: HexColor
+
+
+class ProjectMilestone(_Base):
+    title: str
+    date: str
+    note: str
+
+
+class ProjectSnapshot(_Base):
+    client: str
+    projectName: str
+    slug: Slug
+    status: Literal["active", "paused", "wrapped"]
+    startedOn: str
+    targetOn: str
+    overallPct: int = Field(ge=0, le=100)
+    currentPhaseId: str
+    stats: list[ProjectStat] = Field(default_factory=list)
+    phases: list[ProjectPhase] = Field(default_factory=list)
+    activity: list[ProjectActivity] = Field(default_factory=list)
+    team: list[ProjectTeamMember] = Field(default_factory=list)
+    nextMilestone: ProjectMilestone
+
+
+# ---------------------------------------------------------------------------
 # Auth
 # ---------------------------------------------------------------------------
 
@@ -344,8 +416,13 @@ class AdminUserOut(_Base):
     id: str
     email: EmailStr
     name: str
+    role: Role
     is_active: bool
     created_at: datetime
+
+
+# Backwards-compat alias — the table backs all roles now.
+UserOut = AdminUserOut
 
 
 class LoginResponse(_Base):

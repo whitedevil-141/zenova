@@ -1,16 +1,20 @@
 """Alembic environment.
 
-Uses the sync DB URL (``DATABASE_URL_SYNC``) so migrations can run via the
-standard ``psycopg`` driver. Falls back to the async URL with the driver
-swapped out if the sync variant isn't provided.
+Builds the engine directly from the resolved URL (sync or async). We
+intentionally bypass ``engine_from_config`` because Alembic's underlying
+ConfigParser treats ``%`` as an interpolation token, which breaks
+percent-encoded credentials in URLs (e.g. ``%3F`` for ``?``).
 """
 
 from __future__ import annotations
 
+import asyncio
 from logging.config import fileConfig
 
 from alembic import context
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import create_engine, pool
+from sqlalchemy.engine import Connection
+from sqlalchemy.ext.asyncio import create_async_engine
 
 from app.config import get_settings
 from app.models import Base
@@ -23,23 +27,32 @@ if config.config_file_name is not None:
 
 def _resolve_url() -> str:
     settings = get_settings()
+    # Prefer the explicit sync URL if provided. If it's still an asyncpg URL,
+    # the async branch below handles it.
     if settings.database_url_sync:
         return settings.database_url_sync
-    # Best-effort fallback: convert async URL to a sync psycopg URL.
-    return (
-        settings.database_url.replace("+asyncpg", "+psycopg")
-        if "+asyncpg" in settings.database_url
-        else settings.database_url
-    )
+    return settings.database_url
 
 
-config.set_main_option("sqlalchemy.url", _resolve_url())
+URL = _resolve_url()
+IS_ASYNC = "+asyncpg" in URL
+
 target_metadata = Base.metadata
+
+
+def _do_run_migrations(connection: Connection) -> None:
+    context.configure(
+        connection=connection,
+        target_metadata=target_metadata,
+        compare_type=True,
+    )
+    with context.begin_transaction():
+        context.run_migrations()
 
 
 def run_migrations_offline() -> None:
     context.configure(
-        url=config.get_main_option("sqlalchemy.url"),
+        url=URL,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -49,23 +62,23 @@ def run_migrations_offline() -> None:
         context.run_migrations()
 
 
-def run_migrations_online() -> None:
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-    )
+async def run_async_migrations() -> None:
+    connectable = create_async_engine(URL, poolclass=pool.NullPool, future=True)
+    async with connectable.connect() as connection:
+        await connection.run_sync(_do_run_migrations)
+    await connectable.dispose()
+
+
+def run_migrations_online_sync() -> None:
+    connectable = create_engine(URL, poolclass=pool.NullPool, future=True)
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection,
-            target_metadata=target_metadata,
-            compare_type=True,
-        )
-        with context.begin_transaction():
-            context.run_migrations()
+        _do_run_migrations(connection)
+    connectable.dispose()
 
 
 if context.is_offline_mode():
     run_migrations_offline()
+elif IS_ASYNC:
+    asyncio.run(run_async_migrations())
 else:
-    run_migrations_online()
+    run_migrations_online_sync()

@@ -24,6 +24,11 @@ class Base(DeclarativeBase):
 
 
 class AdminUser(Base):
+    """Auth user. Despite the legacy table name ``admin_users`` (kept to avoid a
+    rename migration), rows here may have any role — admin, team, or client.
+    Use the ``role`` column with the RBAC dependencies in :mod:`app.deps` to
+    decide what they can access."""
+
     __tablename__ = "admin_users"
 
     id: Mapped[uuid.UUID] = mapped_column(
@@ -32,6 +37,7 @@ class AdminUser(Base):
     email: Mapped[str] = mapped_column(String(254), unique=True, index=True, nullable=False)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
+    role: Mapped[str] = mapped_column(String(16), nullable=False, default="admin", index=True)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
@@ -110,6 +116,21 @@ class SiteContent(Base):
 
 class BrandSettings(Base):
     __tablename__ = "brand_settings"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, default=1)
+    data: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+    )
+
+
+class ClientProject(Base):
+    """The live snapshot the client portal renders and the team portal edits."""
+
+    __tablename__ = "client_projects"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, default=1)
     data: Mapped[dict] = mapped_column(JSONB, nullable=False)

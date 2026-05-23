@@ -18,7 +18,17 @@ from app.errors import install_exception_handlers
 from app.limiter import limiter
 from app.logging import configure_logging, logger
 from app.middleware import RequestIDMiddleware
-from app.routers import auth, brand, content, projects, public, services, team, uploads
+from app.routers import (
+    auth,
+    brand,
+    client_project,
+    content,
+    projects,
+    public,
+    services,
+    team,
+    uploads,
+)
 
 
 @asynccontextmanager
@@ -109,6 +119,7 @@ def create_app() -> FastAPI:
     app.include_router(content.router, prefix=prefix)
     app.include_router(brand.router, prefix=prefix)
     app.include_router(uploads.router, prefix=prefix)
+    app.include_router(client_project.router, prefix=prefix)
 
     return app
 
