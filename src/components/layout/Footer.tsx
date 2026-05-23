@@ -104,10 +104,10 @@ export function Footer() {
           }}
         >
           <div className="mono" style={{ color: 'var(--fg-faint)' }}>
-            © 2026 Zenova
+            © 2026 Zenova Solutions, Inc. All rights reserved.
           </div>
           <div className="mono" style={{ color: 'var(--fg-faint)' }}>
-            Brooklyn · Berlin
+            Design, build, and grow
           </div>
         </div>
       </div>

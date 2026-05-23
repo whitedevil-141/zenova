@@ -67,10 +67,22 @@ export function CTA() {
               {cta.sub}
             </p>
             <div style={{ marginTop: 40, display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap' }}>
-              <button className="btn-primary">
+              <button
+                className="btn-primary"
+                onClick={() => {
+                  if (cta.primaryHref) window.location.href = cta.primaryHref;
+                }}
+              >
                 {cta.primary} <Icon.Arrow size={16} />
               </button>
-              <button className="btn-ghost">{cta.secondary}</button>
+              <button
+                className="btn-ghost"
+                onClick={() => {
+                  if (cta.secondaryHref) window.location.href = cta.secondaryHref;
+                }}
+              >
+                {cta.secondary}
+              </button>
             </div>
           </div>
         </div>

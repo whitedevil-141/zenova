@@ -55,6 +55,33 @@ export interface MarqueeItem {
   label: string;
 }
 
+export interface AboutValue {
+  id: string;
+  icon: string;
+  title: string;
+  blurb: string;
+  hue: string;
+}
+
+export interface AboutRole {
+  id: string;
+  title: string;
+  location: string;
+  href: string;
+}
+
+export interface AboutMilestone {
+  id: string;
+  year: string;
+  what: string;
+}
+
+export interface AboutContent {
+  values: AboutValue[];
+  roles: AboutRole[];
+  timeline: AboutMilestone[];
+}
+
 export interface SiteContent {
   hero: {
     badge: string;
@@ -62,7 +89,9 @@ export interface SiteContent {
     rotatingWords: string[];
     sub: string;
     primaryCta: string;
+    primaryCtaHref: string;
     secondaryCta: string;
+    secondaryCtaHref: string;
     stats: Array<{ id: string; num: string; label: string }>;
   };
   cta: {
@@ -71,12 +100,15 @@ export interface SiteContent {
     accentTitle: string;
     sub: string;
     primary: string;
+    primaryHref: string;
     secondary: string;
+    secondaryHref: string;
   };
   faqs: FAQItem[];
   testimonials: TestimonialItem[];
   marquee: MarqueeItem[];
   contactEmail: string;
+  about: AboutContent;
 }
 
 export interface BrandSettings {
@@ -101,7 +133,9 @@ const DEFAULT_CONTENT: SiteContent = {
     rotatingWords: ['Web Development', 'Marketing', 'Startup Launch', 'Operations', 'Content'],
     sub: 'Design, build, and grow — without juggling agencies. We handle the whole thing.',
     primaryCta: 'Start a project',
+    primaryCtaHref: '#contact',
     secondaryCta: 'See our work',
+    secondaryCtaHref: '#services',
     stats: [
       { id: 's1', num: '20+', label: 'Projects shipped' },
       { id: 's2', num: '8', label: 'Active clients' },
@@ -115,7 +149,9 @@ const DEFAULT_CONTENT: SiteContent = {
     accentTitle: "Let's talk.",
     sub: 'A quick 30-minute call. No pitch, just your project.',
     primary: 'Book a call',
+    primaryHref: '#contact',
     secondary: 'hello@zenova.bd',
+    secondaryHref: 'mailto:hello@zenova.bd',
   },
   faqs: [
     { id: 'f1', q: 'How are you different from an agency?', a: 'One team handles design, build, and growth. No handoffs between vendors — same people from start to finish.' },
@@ -144,6 +180,24 @@ const DEFAULT_CONTENT: SiteContent = {
     { id: 'm8', label: 'Operations' },
   ],
   contactEmail: 'hello@zenova.bd',
+  about: {
+    values: [
+      { id: 'v1', icon: 'Layers', title: 'One team, start to finish', blurb: 'The people you meet on day one are the same people on day ninety. No handoffs.', hue: '#3a5bff' },
+      { id: 'v2', icon: 'Spark', title: 'Build, then talk', blurb: 'We ship working things, not decks about working things.', hue: '#6d4cff' },
+      { id: 'v3', icon: 'Compass', title: 'Outcomes over output', blurb: 'Every project ends with one number we agreed to move. We share it either way.', hue: '#a855f7' },
+    ],
+    roles: [
+      { id: 'r1', title: 'Senior product designer', location: 'Remote', href: '' },
+      { id: 'r2', title: 'Senior engineer', location: 'Remote', href: '' },
+      { id: 'r3', title: 'Growth strategist', location: 'Remote', href: '' },
+    ],
+    timeline: [
+      { id: 'tl1', year: '2019', what: 'Mira and Tobias start Zenova.' },
+      { id: 'tl2', year: '2021', what: 'First long-term client. Growth becomes a core practice.' },
+      { id: 'tl3', year: '2023', what: 'Content and operations teams join.' },
+      { id: 'tl4', year: '2026', what: 'Working with 8 active clients across 3 continents.' },
+    ],
+  },
 };
 
 const DEFAULT_BRAND: BrandSettings = {

@@ -150,7 +150,9 @@ class HeroContent(_Base):
     rotatingWords: list[str] = Field(default_factory=list)
     sub: str
     primaryCta: str
+    primaryCtaHref: str = ""
     secondaryCta: str
+    secondaryCtaHref: str = ""
     stats: list[HeroStat] = Field(default_factory=list)
 
 
@@ -160,7 +162,9 @@ class CTAContent(_Base):
     accentTitle: str
     sub: str
     primary: str
+    primaryHref: str = ""
     secondary: str
+    secondaryHref: str = ""
 
 
 class FAQItem(_Base):
@@ -182,6 +186,33 @@ class MarqueeItem(_Base):
     label: str
 
 
+class AboutValue(_Base):
+    id: str
+    icon: str
+    title: str
+    blurb: str
+    hue: HexColor
+
+
+class AboutRole(_Base):
+    id: str
+    title: str
+    location: str
+    href: str = ""
+
+
+class AboutMilestone(_Base):
+    id: str
+    year: str
+    what: str
+
+
+class AboutContent(_Base):
+    values: list[AboutValue] = Field(default_factory=list)
+    roles: list[AboutRole] = Field(default_factory=list)
+    timeline: list[AboutMilestone] = Field(default_factory=list)
+
+
 class SiteContent(_Base):
     hero: HeroContent
     cta: CTAContent
@@ -189,6 +220,7 @@ class SiteContent(_Base):
     testimonials: list[TestimonialItem] = Field(default_factory=list)
     marquee: list[MarqueeItem] = Field(default_factory=list)
     contactEmail: EmailStr
+    about: AboutContent = Field(default_factory=AboutContent)
 
 
 # ---------------------------------------------------------------------------
@@ -243,6 +275,7 @@ class SiteContentPatch(_Base):
     testimonials: list[TestimonialItem] | None = None
     marquee: list[MarqueeItem] | None = None
     contactEmail: EmailStr | None = None
+    about: AboutContent | None = None
 
 
 class TeamMemberPatch(_Base):

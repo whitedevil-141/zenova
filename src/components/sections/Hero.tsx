@@ -122,15 +122,27 @@ export function Hero({ rotateMs }: HeroProps) {
             animation: 'fade-up 1.2s cubic-bezier(.2,.7,.2,1) both .3s',
           }}
         >
-          <button className="btn-primary" onClick={() => (window.location.href = '#contact')}>
+          <button
+            className="btn-primary"
+            onClick={() => {
+              const href = content.hero.primaryCtaHref || '#contact';
+              window.location.href = href;
+            }}
+          >
             {content.hero.primaryCta}
             <span style={{ display: 'inline-flex', animation: 'arrow-bounce 1.6s ease-in-out infinite' }}>
               <Icon.Arrow size={16} />
             </span>
           </button>
-          <button className="btn-ghost" onClick={() => (window.location.href = '#services')}>
+          <button
+            className="btn-ghost"
+            onClick={() => {
+              const href = content.hero.secondaryCtaHref || '#services';
+              window.location.href = href;
+            }}
+          >
             {content.hero.secondaryCta}
-            </button>
+          </button>
         </div>
 
         <div

@@ -1,10 +1,10 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AdminShell } from '@/admin/components/AdminShell';
 import { Field, TextField, Toast } from '@/admin/components/Form';
 import {
+  brandStore,
   exportAll,
   importAll,
-  patchBrand,
   resetAll,
   useBrand,
   type BrandSettings,
@@ -16,16 +16,46 @@ function uid() {
 
 export function Settings() {
   const [brand] = useBrand();
+  const [draft, setDraft] = useState<BrandSettings>(brand);
   const [toast, setToast] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const showError = (err: unknown) => {
-    setToast(err instanceof Error ? err.message : 'Save failed.');
+  useEffect(() => {
+    setDraft(brand);
+  }, [brand]);
+
+  const dirty = JSON.stringify(draft) !== JSON.stringify(brand);
+
+  const updateDraft = (delta: Partial<BrandSettings>) => {
+    setDraft((d) => ({ ...d, ...delta }));
   };
 
-  const updateBrand = (delta: Partial<BrandSettings>) => {
-    patchBrand(delta).catch(showError);
+  const updateLocation = (
+    i: number,
+    patchObj: Partial<BrandSettings['locations'][number]>,
+  ) => {
+    setDraft((d) => ({
+      ...d,
+      locations: d.locations.map((l, idx) =>
+        idx === i ? { ...l, ...patchObj } : l,
+      ),
+    }));
   };
+
+  const save = async () => {
+    setSaving(true);
+    try {
+      await brandStore.set(draft);
+      setToast('Saved.');
+    } catch (err) {
+      setToast(err instanceof Error ? err.message : 'Save failed.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const discard = () => setDraft(brand);
 
   const handleExport = () => {
     const blob = new Blob([JSON.stringify(exportAll(), null, 2)], {
@@ -51,16 +81,6 @@ export function Settings() {
     }
   };
 
-  const updateLocation = (
-    i: number,
-    patchObj: Partial<BrandSettings['locations'][number]>,
-  ) => {
-    const locations = brand.locations.map((l, idx) =>
-      idx === i ? { ...l, ...patchObj } : l,
-    );
-    updateBrand({ locations });
-  };
-
   return (
     <AdminShell
       crumbs={[{ label: 'Settings' }]}
@@ -68,6 +88,18 @@ export function Settings() {
       sub="Brand identity, locations, import / export."
       actions={
         <>
+          {dirty && (
+            <button className="adm-btn" onClick={discard} disabled={saving}>
+              Discard
+            </button>
+          )}
+          <button
+            className="adm-btn adm-btn--primary"
+            onClick={save}
+            disabled={!dirty || saving}
+          >
+            {saving ? 'Saving…' : dirty ? 'Save changes' : 'Saved'}
+          </button>
           <button className="adm-btn" onClick={handleExport}>
             ↓ Export JSON
           </button>
@@ -116,25 +148,25 @@ export function Settings() {
         <div className="adm-row adm-row--2">
           <TextField
             label="Studio name"
-            value={brand.studioName}
-            onChange={(v) => updateBrand({ studioName: v })}
+            value={draft.studioName}
+            onChange={(v) => updateDraft({ studioName: v })}
           />
           <TextField
             label="Tagline"
-            value={brand.tagline}
-            onChange={(v) => updateBrand({ tagline: v })}
+            value={draft.tagline}
+            onChange={(v) => updateDraft({ tagline: v })}
           />
         </div>
         <div className="adm-row adm-row--2">
           <TextField
             label="Contact email"
-            value={brand.contactEmail}
-            onChange={(v) => updateBrand({ contactEmail: v })}
+            value={draft.contactEmail}
+            onChange={(v) => updateDraft({ contactEmail: v })}
           />
           <TextField
             label="Careers email"
-            value={brand.careersEmail}
-            onChange={(v) => updateBrand({ careersEmail: v })}
+            value={draft.careersEmail}
+            onChange={(v) => updateDraft({ careersEmail: v })}
           />
         </div>
       </div>
@@ -145,9 +177,9 @@ export function Settings() {
           <button
             className="adm-btn adm-btn--sm"
             onClick={() =>
-              updateBrand({
+              updateDraft({
                 locations: [
-                  ...brand.locations,
+                  ...draft.locations,
                   { id: uid(), city: '', tz: '', detail: '' },
                 ],
               })
@@ -156,7 +188,7 @@ export function Settings() {
             + Add location
           </button>
         </div>
-        {brand.locations.map((l, i) => (
+        {draft.locations.map((l, i) => (
           <div
             key={l.id}
             style={{
@@ -187,8 +219,8 @@ export function Settings() {
             <button
               className="adm-btn adm-btn--sm adm-btn--danger"
               onClick={() =>
-                updateBrand({
-                  locations: brand.locations.filter((_, idx) => idx !== i),
+                updateDraft({
+                  locations: draft.locations.filter((_, idx) => idx !== i),
                 })
               }
             >

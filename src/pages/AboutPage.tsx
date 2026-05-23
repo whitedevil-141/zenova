@@ -3,63 +3,16 @@ import { PageHero } from '@/components/layout/PageHero';
 import { CTA } from '@/components/sections/CTA';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Icon, type IconName, type IconComponent } from '@/components/icons/Icon';
-import { useTeam, useBrand } from '@/admin/store';
-
-interface Value {
-  icon: IconName;
-  title: string;
-  blurb: string;
-  hue: string;
-}
-
-const VALUES: Value[] = [
-  {
-    icon: 'Layers',
-    title: 'One team, start to finish',
-    blurb: 'The people you meet on day one are the same people on day ninety. No handoffs.',
-    hue: '#3a5bff',
-  },
-  {
-    icon: 'Spark',
-    title: 'Build, then talk',
-    blurb: 'We ship working things, not decks about working things.',
-    hue: '#6d4cff',
-  },
-  {
-    icon: 'Compass',
-    title: 'Outcomes over output',
-    blurb: 'Every project ends with one number we agreed to move. We share it either way.',
-    hue: '#a855f7',
-  },
-];
-
-interface Role {
-  title: string;
-  location: string;
-}
-
-const ROLES: Role[] = [
-  { title: 'Senior product designer', location: 'Remote' },
-  { title: 'Senior engineer', location: 'Remote' },
-  { title: 'Growth strategist', location: 'Remote' },
-];
-
-interface Milestone {
-  year: string;
-  what: string;
-}
-
-const TIMELINE: Milestone[] = [
-  { year: '2019', what: 'Mira and Tobias start Zenova.' },
-  { year: '2021', what: 'First long-term client. Growth becomes a core practice.' },
-  { year: '2023', what: 'Content and operations teams join.' },
-  { year: '2026', what: 'Working with 8 active clients across 3 continents.' },
-];
+import { useTeam, useBrand, useContent } from '@/admin/store';
 
 export function AboutPage() {
   const [TEAM] = useTeam();
   const [brand] = useBrand();
+  const [content] = useContent();
   const LOCATIONS = brand.locations;
+  const VALUES = content.about?.values ?? [];
+  const ROLES = content.about?.roles ?? [];
+  const TIMELINE = content.about?.timeline ?? [];
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -136,10 +89,10 @@ export function AboutPage() {
             }}
           >
             {VALUES.map((v) => {
-              const IconC = Icon[v.icon] as IconComponent;
+              const IconC = (Icon[v.icon as IconName] ?? Icon.Layers) as IconComponent;
               return (
                 <div
-                  key={v.title}
+                  key={v.id}
                   className="card"
                   style={{
                     padding: 28,
@@ -283,7 +236,7 @@ export function AboutPage() {
           >
             {TIMELINE.map((m, i) => (
               <div
-                key={m.year}
+                key={m.id}
                 style={{
                   display: 'grid',
                   gridTemplateColumns: '120px 1fr',
@@ -369,9 +322,11 @@ export function AboutPage() {
               >
                 {ROLES.map((r) => (
                   <a
-                    key={r.title}
-                    href="#"
-                    onClick={(e) => e.preventDefault()}
+                    key={r.id}
+                    href={r.href || '#'}
+                    onClick={(e) => {
+                      if (!r.href) e.preventDefault();
+                    }}
                     style={{
                       display: 'grid',
                       gridTemplateColumns: '1fr auto auto',

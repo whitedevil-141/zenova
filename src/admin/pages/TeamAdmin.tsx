@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AdminShell } from '@/admin/components/AdminShell';
 import { ColorField, TextArea, TextField, Toast } from '@/admin/components/Form';
-import { patchTeamMember, teamStore, useTeam, type TeamMember } from '@/admin/store';
+import { teamStore, useTeam, type TeamMember } from '@/admin/store';
 
 function uid() {
   return 't' + Math.random().toString(36).slice(2, 9);
@@ -9,44 +9,76 @@ function uid() {
 
 export function TeamAdmin() {
   const [team] = useTeam();
+  const [draft, setDraft] = useState<TeamMember[]>(team);
   const [toast, setToast] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    setDraft(team);
+  }, [team]);
+
+  const dirty = JSON.stringify(draft) !== JSON.stringify(team);
 
   const showError = (err: unknown) =>
     setToast(err instanceof Error ? err.message : 'Save failed.');
 
   const update = (i: number, patch: Partial<TeamMember>) => {
-    patchTeamMember(team[i].id, patch).catch(showError);
+    setDraft((d) => d.map((m, idx) => (idx === i ? { ...m, ...patch } : m)));
   };
 
   const remove = (i: number) => {
-    if (!window.confirm(`Remove ${team[i].name}?`)) return;
-    teamStore.set(team.filter((_, idx) => idx !== i)).catch(showError);
+    if (!window.confirm(`Remove ${draft[i].name}?`)) return;
+    setDraft((d) => d.filter((_, idx) => idx !== i));
   };
 
   const add = () => {
-    teamStore
-      .set([
-        ...team,
-        { id: uid(), name: 'New member', role: 'Role', bio: '', initials: 'NM', tone: '#3a5bff' },
-      ])
-      .catch(showError);
+    setDraft((d) => [
+      ...d,
+      { id: uid(), name: 'New member', role: 'Role', bio: '', initials: 'NM', tone: '#3a5bff' },
+    ]);
   };
 
   const move = (i: number, dir: -1 | 1) => {
     const j = i + dir;
-    if (j < 0 || j >= team.length) return;
-    const next = [...team];
+    if (j < 0 || j >= draft.length) return;
+    const next = [...draft];
     [next[i], next[j]] = [next[j], next[i]];
-    teamStore.set(next).catch(showError);
+    setDraft(next);
   };
+
+  const save = async () => {
+    setSaving(true);
+    try {
+      await teamStore.set(draft);
+      setToast('Saved.');
+    } catch (err) {
+      showError(err);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const discard = () => setDraft(team);
 
   return (
     <AdminShell
       crumbs={[{ label: 'Team' }]}
       title="Team"
-      sub="Renders on the About page. Changes here appear live."
+      sub="Renders on the About page. Click Save to publish changes."
       actions={
         <>
+          {dirty && (
+            <button className="adm-btn" onClick={discard} disabled={saving}>
+              Discard
+            </button>
+          )}
+          <button
+            className="adm-btn adm-btn--primary"
+            onClick={save}
+            disabled={!dirty || saving}
+          >
+            {saving ? 'Saving…' : dirty ? 'Save changes' : 'Saved'}
+          </button>
           <button
             className="adm-btn"
             onClick={() => {
@@ -57,14 +89,14 @@ export function TeamAdmin() {
           >
             Reset
           </button>
-          <button className="adm-btn adm-btn--primary" onClick={add}>
+          <button className="adm-btn" onClick={add}>
             + Add member
           </button>
         </>
       }
     >
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 14 }}>
-        {team.map((m, i) => (
+        {draft.map((m, i) => (
           <div key={m.id} className="adm-card" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <div
