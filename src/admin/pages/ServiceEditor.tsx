@@ -10,6 +10,7 @@ import {
   Toast,
   Field,
 } from '@/admin/components/Form';
+import { Toggle } from '@/components/ui/inputs';
 import { patchService, servicesStore, useServices } from '@/admin/store';
 import type {
   ServiceDetail,
@@ -420,14 +421,11 @@ function PackageEditor({
             placeholder="e.g. CMS + content model"
           />
           <Field label="Featured?">
-            <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14 }}>
-              <input
-                type="checkbox"
-                checked={!!p.featured}
-                onChange={(e) => update(i, { featured: e.target.checked })}
-              />
-              Mark as the most-picked package
-            </label>
+            <Toggle
+              checked={!!p.featured}
+              onChange={(v) => update(i, { featured: v })}
+              label="Mark as the most-picked package"
+            />
           </Field>
         </div>
       ))}

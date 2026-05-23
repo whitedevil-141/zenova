@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AdminShell } from '@/admin/components/AdminShell';
 import { Toast } from '@/admin/components/Form';
+import { Dropdown } from '@/components/ui/inputs';
 import { ApiError } from '@/lib/api';
 import {
   deleteUpload,
@@ -153,19 +154,14 @@ export function MediaAdmin() {
           <label className="adm-label" style={{ margin: 0 }}>
             Folder
           </label>
-          <select
-            className="adm-input"
-            style={{ maxWidth: 220 }}
-            value={prefix}
-            onChange={(e) => setPrefix(e.target.value as Prefix)}
-            disabled={uploading}
-          >
-            {PREFIX_OPTIONS.map((p) => (
-              <option key={p} value={p}>
-                {p}
-              </option>
-            ))}
-          </select>
+          <div style={{ width: 220 }}>
+            <Dropdown
+              value={prefix}
+              options={PREFIX_OPTIONS.map((p) => ({ value: p, label: p }))}
+              onChange={(v) => setPrefix(v as Prefix)}
+              disabled={uploading}
+            />
+          </div>
           <span style={{ flex: 1 }} />
           <span style={{ fontSize: 12, color: 'var(--fg-faint)' }}>
             {items.length} {items.length === 1 ? 'image' : 'images'}

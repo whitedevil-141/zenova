@@ -1,4 +1,5 @@
 import { useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
+import { DatePicker, Dropdown, Toggle } from '@/components/ui/inputs';
 
 export function Field({
   label,
@@ -80,26 +81,86 @@ export function Select({
   value,
   options,
   onChange,
+  searchable,
+  placeholder,
 }: {
   label: string;
   hint?: string;
   value: string;
   options: Array<{ value: string; label: string }>;
   onChange: (v: string) => void;
+  searchable?: boolean;
+  placeholder?: string;
 }) {
   return (
     <Field label={label} hint={hint}>
-      <select
-        className="adm-select"
+      <Dropdown
         value={value}
-        onChange={(e: ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)}
-      >
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
+        options={options}
+        onChange={onChange}
+        searchable={searchable}
+        placeholder={placeholder}
+      />
+    </Field>
+  );
+}
+
+export function DateField({
+  label,
+  hint,
+  value,
+  onChange,
+  min,
+  max,
+  clearable,
+  placeholder,
+}: {
+  label: string;
+  hint?: string;
+  value: string;
+  onChange: (v: string) => void;
+  min?: string;
+  max?: string;
+  clearable?: boolean;
+  placeholder?: string;
+}) {
+  return (
+    <Field label={label} hint={hint}>
+      <DatePicker
+        value={value || null}
+        onChange={(v) => onChange(v ?? '')}
+        min={min}
+        max={max}
+        clearable={clearable}
+        placeholder={placeholder}
+      />
+    </Field>
+  );
+}
+
+export function ToggleField({
+  label,
+  hint,
+  description,
+  value,
+  onChange,
+  disabled,
+}: {
+  label: string;
+  hint?: string;
+  description?: string;
+  value: boolean;
+  onChange: (v: boolean) => void;
+  disabled?: boolean;
+}) {
+  return (
+    <Field label={label} hint={hint}>
+      <Toggle
+        checked={value}
+        onChange={onChange}
+        disabled={disabled}
+        label={description}
+      />
     </Field>
   );
 }

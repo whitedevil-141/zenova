@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { TeamShell } from '@/team/components/TeamShell';
-import { Field, Select, TextField, Toast } from '@/admin/components/Form';
+import { DateField, Field, Select, TextField, Toast } from '@/admin/components/Form';
+import { Dropdown } from '@/components/ui/inputs';
 import { useTeamSession } from '@/team/store';
 import {
   fetchProjectSnapshot,
@@ -172,22 +173,19 @@ export function TeamOverview() {
       <div className="adm-card" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div className="adm-label">Timeline</div>
         <div className="adm-row adm-row--2">
-          <Field label="Started on">
-            <input
-              type="date"
-              className="adm-input"
-              value={draft.startedOn}
-              onChange={(e) => update('startedOn', e.target.value)}
-            />
-          </Field>
-          <Field label="Target end date">
-            <input
-              type="date"
-              className="adm-input"
-              value={draft.targetOn}
-              onChange={(e) => update('targetOn', e.target.value)}
-            />
-          </Field>
+          <DateField
+            label="Started on"
+            value={draft.startedOn}
+            onChange={(v) => update('startedOn', v)}
+            placeholder="Select start date"
+          />
+          <DateField
+            label="Target end date"
+            value={draft.targetOn}
+            onChange={(v) => update('targetOn', v)}
+            min={draft.startedOn || undefined}
+            placeholder="Select target date"
+          />
         </div>
       </div>
 
@@ -362,18 +360,37 @@ function ActivityComposer({ snap, sessionUserName, onPosted, onError }: Composer
 
         <div className="adm-row adm-row--2">
           <Field label="Who">
-            <select
-              className="adm-select"
+            <Dropdown
               value={authorKey}
-              onChange={(e) => setAuthorKey(e.target.value)}
+              options={authors.map((a) => ({
+                value: a.key,
+                label: a.name,
+                hint: a.key === 'me' ? 'You' : undefined,
+                icon: (
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      width: 18,
+                      height: 18,
+                      borderRadius: '50%',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: `linear-gradient(135deg, ${a.tone}, var(--accent-3))`,
+                      color: '#fff',
+                      fontFamily: 'var(--font-display)',
+                      fontSize: 9,
+                      fontWeight: 600,
+                    }}
+                  >
+                    {a.initial || a.name.slice(0, 1).toUpperCase()}
+                  </span>
+                ),
+              }))}
+              onChange={setAuthorKey}
               disabled={posting || authors.length === 0}
-            >
-              {authors.map((a) => (
-                <option key={a.key} value={a.key}>
-                  {a.name}
-                </option>
-              ))}
-            </select>
+              placeholder="Pick author"
+            />
           </Field>
           <Select
             label="Type"

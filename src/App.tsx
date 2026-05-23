@@ -23,6 +23,7 @@ import { TeamAdmin } from '@/admin/pages/TeamAdmin';
 import { ContentAdmin } from '@/admin/pages/ContentAdmin';
 import { MediaAdmin } from '@/admin/pages/MediaAdmin';
 import { Settings as AdminSettings } from '@/admin/pages/Settings';
+import { InputsShowcase } from '@/admin/pages/InputsShowcase';
 import { TWEAK_DEFAULTS } from '@/config/tweaks';
 import { useTweaks } from '@/hooks/useTweaks';
 import { applyPalette } from '@/lib/palette';
@@ -219,6 +220,7 @@ function AdminRoutes() {
       <Route path="content" element={<ContentAdmin />} />
       <Route path="media" element={<MediaAdmin />} />
       <Route path="settings" element={<AdminSettings />} />
+      <Route path="inputs" element={<InputsShowcase />} />
     </Routes>
   );
 }
