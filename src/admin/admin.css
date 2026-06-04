@@ -751,6 +751,7 @@
 .adm-btn--primary {
   background: var(--grad);
   border-color: transparent;
+  border: 0px solid transparent;
   color: #fff;
   box-shadow: 0 4px 14px rgba(58, 91, 255, 0.3);
 }
