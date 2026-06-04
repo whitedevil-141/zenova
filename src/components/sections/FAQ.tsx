@@ -52,7 +52,7 @@ function FAQItem({ item, isOpen, onToggle }: { item: QA; isOpen: boolean; onTogg
             height: 38,
             flexShrink: 0,
             borderRadius: '50%',
-            border: '1px solid transparent',
+            border: isOpen ? '0px solid transparent' : '1px solid var(--line)',
             borderColor: isOpen ? 'transparent' : 'var(--line)',
             display: 'flex',
             alignItems: 'center',
@@ -60,7 +60,7 @@ function FAQItem({ item, isOpen, onToggle }: { item: QA; isOpen: boolean; onTogg
             color: isOpen ? '#fff' : 'var(--fg-faint)',
             background: isOpen ? 'var(--grad)' : 'transparent',
             transform: isOpen ? 'rotate(45deg)' : 'rotate(0)',
-            transition: 'all .4s cubic-bezier(.2,.7,.2,1)',
+            transition: 'background .4s cubic-bezier(.2,.7,.2,1), color .4s cubic-bezier(.2,.7,.2,1), transform .4s cubic-bezier(.2,.7,.2,1)',
           }}
         >
           <Icon.Plus size={16} />

@@ -24,7 +24,7 @@ export function Hero({ rotateMs }: HeroProps) {
         overflow: 'hidden',
       }}
     >
-      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: -1 }}>
+      {/* <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: -1 }}>
         <div
           style={{
             position: 'absolute',
@@ -51,7 +51,7 @@ export function Hero({ rotateMs }: HeroProps) {
             animation: 'blob2 26s linear infinite',
           }}
         />
-      </div>
+      </div> */}
 
       <div style={{ maxWidth: 1100, width: '100%', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <div

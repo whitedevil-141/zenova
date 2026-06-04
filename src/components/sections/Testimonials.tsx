@@ -19,12 +19,13 @@ function MarqueeRow({
 }) {
   const seq = [...items, ...items, ...items, ...items];
   return (
-    <div style={{ overflow: 'hidden' }}>
+    <div style={{ overflow: 'visible' }}>
       <div
         className="tm-track"
         style={{
           display: 'flex',
           gap: 20,
+          // overflow: 'hidden',
           width: 'max-content',
           animation: `${direction === 'left' ? 'scroll-left' : 'scroll-right'} ${speed}s linear infinite`,
           willChange: 'transform',
@@ -51,6 +52,7 @@ function TestimonialCard({ t }: { t: Testimonial }) {
         flexShrink: 0,
         padding: 28,
         borderRadius: 20,
+        boxShadow: '0 6px 14px rgba(0,0,0,0.12)',
         background: 'linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.012))',
         border: '1px solid var(--line)',
         display: 'flex',
@@ -58,6 +60,7 @@ function TestimonialCard({ t }: { t: Testimonial }) {
         gap: 20,
         position: 'relative',
         overflow: 'hidden',
+        
       }}
     >
       <div
@@ -68,7 +71,7 @@ function TestimonialCard({ t }: { t: Testimonial }) {
           width: 160,
           height: 160,
           borderRadius: '50%',
-          background: `radial-gradient(circle, ${t.tone}33, transparent 70%)`,
+          // background: `radial-gradient(circle, ${t.tone}33, transparent 70%)`,
           pointerEvents: 'none',
         }}
       />
@@ -132,6 +135,7 @@ export function Testimonials() {
   const [content] = useContent();
   const ITEMS = content.testimonials;
   const row1 = ITEMS.slice(0, Math.ceil(ITEMS.length / 2));
+
   const row2 = ITEMS.slice(Math.ceil(ITEMS.length / 2));
 
   return (
@@ -205,6 +209,7 @@ export function Testimonials() {
         <MarqueeRow items={row1} direction="left" speed={42} />
         <div style={{ height: 18 }} />
         <MarqueeRow items={row2} direction="right" speed={50} />
+        <div style={{ height: 18 }} />
       </div>
     </section>
   );

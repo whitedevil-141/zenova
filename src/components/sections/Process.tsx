@@ -121,14 +121,14 @@ export function Process() {
                       width: 34,
                       height: 34,
                       borderRadius: 10,
-                      border: '1px solid transparent',
+                      border: on ? '0px solid transparent' : '1px solid var(--line)',
                       borderColor: on ? 'transparent' : 'var(--line)',
                       background: on ? 'var(--grad)' : 'transparent',
                       color: on ? '#fff' : 'var(--fg-faint)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      transition: 'all .3s',
+                      transition: 'background .3s, color .3s, transform .3s'
                     }}
                   >
                     <Icon.Arrow size={14} />

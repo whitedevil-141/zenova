@@ -168,7 +168,7 @@ export function Services() {
                       width: 38,
                       height: 38,
                       borderRadius: '50%',
-                      border: '1px solid transparent',
+                      border: isOpen ? '0px solid transparent' : '1px solid transparent',
                       borderColor: isOpen ? 'transparent' : 'var(--line)',
                       color: isOpen ? '#fff' : 'var(--fg-faint)',
                       display: 'flex',

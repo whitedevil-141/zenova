@@ -31,7 +31,7 @@ export function PageHero({ eyebrow, title, sub, crumbs, meta, secondary }: PageH
         borderBottom: '1px solid var(--line)',
       }}
     >
-      <div style={{ position: 'absolute', inset: 0, zIndex: -1, overflow: 'hidden' }}>
+      {/* <div style={{ position: 'absolute', inset: 0, zIndex: -1, overflow: 'hidden' }}>
         <div
           style={{
             position: 'absolute',
@@ -56,7 +56,7 @@ export function PageHero({ eyebrow, title, sub, crumbs, meta, secondary }: PageH
             filter: 'blur(80px)',
           }}
         />
-      </div>
+      </div> */}
 
       <div className="container">
         {crumbs && crumbs.length > 0 && (
